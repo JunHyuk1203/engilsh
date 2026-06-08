@@ -13,7 +13,7 @@ const songsData = [
                 textHtml: "And <span class='highlight-grammar'>I'll tell</span> you all about it <span class='highlight-grammar'>when</span> I see you again", 
                 points: [
                     { label: "문법", value: "시간의 부사절 접속사 when" },
-                    { label: "주의", value: "when 절 안에서는 미래 일도 현재 시제(see)로 씁니다!" }
+                    { label: "규칙", value: "when 절 안에서는 미래의 일도 현재 시제(see)로 써야 합니다!" }
                 ]
             },
             { 
@@ -24,17 +24,17 @@ const songsData = [
                 ]
             },
             { 
-                textHtml: "<span class='highlight-grammar'>How could we not talk</span> about family", 
+                textHtml: "Oh, <span class='highlight-grammar'>I'll tell</span> you all about it when I see you again", 
                 points: [
-                    { label: "문법", value: "조동사의 부정 의문문 (How could we not~?)" },
-                    { label: "뉘앙스", value: "어떻게 가족 얘기를 '안 할 수' 있겠어? (당연히 해야지!)" }
+                    { label: "표현", value: "조동사 will (I'll)" },
+                    { label: "의미", value: "내가 모든 걸 다 말해 '줄게' (화자의 강한 의지와 약속)" }
                 ]
             },
             { 
-                textHtml: "<span class='highlight-grammar'>when family's all that</span> we got?", 
+                textHtml: "<span class='highlight-grammar'>When</span> I see you again", 
                 points: [
-                    { label: "문법", value: "선행사 all + 목적격 관계대명사 that" },
-                    { label: "핵심", value: "선행사가 all, every 등일 때는 which 대신 반드시 that을 씁니다!" }
+                    { label: "구문", value: "부사절의 단독 사용 및 강조" },
+                    { label: "뉘앙스", value: "다시 만나게 될 '그때'를 짙은 그리움과 함께 강조하며 여운을 남김" }
                 ]
             }
         ]
