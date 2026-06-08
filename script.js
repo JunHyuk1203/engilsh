@@ -3,51 +3,79 @@ const songsData = [
     {
         lyrics: [
             { 
-                textHtml: "<span class='highlight-grammar'>If I were</span> a boy", 
+                textHtml: "The snow <span class='highlight-grammar'>glows white</span> on the mountain tonight", 
                 points: [
-                    { label: "문법", value: "가정법 과거" },
-                    { label: "상황", value: "현실에서 절대 불가능한 일을 상상할 때!" }
+                    { label: "문법", value: "2형식 동사 (glow + 형용사 보어)" },
+                    { label: "의미", value: "눈이 '하얗게' 빛난다" }
                 ]
             },
             { 
-                textHtml: "I think I <span class='highlight-grammar'>could understand</span>", 
+                textHtml: "Not a footprint <span class='highlight-grammar'>to be seen</span>", 
                 points: [
-                    { label: "의미", value: "온전히 이해할 수 있을 텐데" },
-                    { label: "왜 could?", value: "'소년이라면' 이라는 불가능한 전제 조건이 충족되어야 가능한 일이라서" }
+                    { label: "문법", value: "to부정사의 수동태 (to be p.p)" },
+                    { label: "왜 수동태?", value: "발자국(footprint)은 스스로 보는 게 아니라 '보여지는' 대상이니까요!" }
                 ]
             },
-            { textHtml: "How it feels to love a girl", points: [] },
             { 
-                textHtml: "I swear <span class='highlight-grammar'>I'd</span> be a better man", 
+                textHtml: "A kingdom <span class='highlight-grammar'>of isolation</span>", 
                 points: [
-                    { label: "표현", value: "I'd = I would 의 원어민 축약형" },
-                    { label: "의미", value: "내가 훨씬 더 좋은 남자가 될 텐데 (강한 다짐)" }
+                    { label: "구문", value: "전치사 of (A of B)" },
+                    { label: "의미", value: "B의 A → 고립의 왕국 (외로운 왕국)" }
                 ]
             },
-            { textHtml: "I'd listen to her", points: [] }
+            { 
+                textHtml: "And it <span class='highlight-grammar'>looks like</span> I'm the queen", 
+                points: [
+                    { label: "문법", value: "감각동사 + like + 문장" },
+                    { label: "특징", value: "look 뒤에 주어/동사가 오려면 접속사 역할을 하는 like가 꼭 필요해요!" }
+                ]
+            },
+            { 
+                textHtml: "The wind <span class='highlight-grammar'>is howling</span> like this <span class='highlight-grammar'>swirling</span> storm", 
+                points: [
+                    { label: "문법", value: "현재진행형(be+V-ing) & 현재분사(V-ing)" },
+                    { label: "의미", value: "is howling(울부짖고 있다), swirling(휘몰아치는 능동의 의미)" }
+                ]
+            }
         ]
     },
     {
         lyrics: [
-            { textHtml: "When I see your face", points: [] },
             { 
-                textHtml: "There's not a thing <span class='highlight-grammar'>that I would change</span>", 
+                textHtml: "Heart <span class='highlight-grammar'>beats</span> fast", 
                 points: [
-                    { label: "문법", value: "목적격 관계대명사 that" },
-                    { label: "역할", value: "앞의 a thing(내가 바꿀 만한 것)을 꾸며줌" },
-                    { label: "꿀팁", value: "목적격 관계대명사는 원어민들이 흔히 생략해요!" }
+                    { label: "문법", value: "3인칭 단수 주어 + 동사s" },
+                    { label: "설명", value: "Heart(심장)가 3인칭 단수(it)라서 동사 beat에 s가 붙었어요!" }
                 ]
             },
-            { textHtml: "'Cause you're amazing", points: [] },
             { 
-                textHtml: "<span class='highlight-grammar'>Just the way</span> you are", 
+                textHtml: "<span class='highlight-grammar'>How to be</span> brave?", 
                 points: [
-                    { label: "의미", value: "있는 그대로의 당신 모습" },
-                    { label: "주의", value: "the way와 how는 절대 함께 쓰지 않는다는 점!" }
+                    { label: "구문", value: "의문사 + to부정사" },
+                    { label: "해석", value: "어떻게 용감해져야 할지 (명사구 역할)" }
                 ]
             },
-            { textHtml: "And when you smile", points: [] },
-            { textHtml: "The whole world stops and stares for a while", points: [] }
+            { 
+                textHtml: "How can I love <span class='highlight-grammar'>when</span> I'm <span class='highlight-grammar'>afraid to</span> fall?", 
+                points: [
+                    { label: "문법", value: "시간의 접속사 when & be afraid to" },
+                    { label: "의미", value: "추락하는 것을 두려워'할 때' 내가 어떻게 사랑할 수 있을까?" }
+                ]
+            },
+            { 
+                textHtml: "But <span class='highlight-grammar'>watching you stand</span> alone", 
+                points: [
+                    { label: "문법", value: "지각동사 + 목적어 + 동사원형" },
+                    { label: "분석", value: "watch(보다) + you(목적어) + stand(원형). '네가 서 있는 것을 보다'" }
+                ]
+            },
+            { 
+                textHtml: "<span class='highlight-grammar'>All of my doubt</span> suddenly <span class='highlight-grammar'>goes</span> away", 
+                points: [
+                    { label: "문법", value: "부분사 + of + 명사 (수일치)" },
+                    { label: "설명", value: "doubt(의심)가 셀 수 없는 단수명사이므로, 전체(All)라도 동사 goes(단수)를 씁니다." }
+                ]
+            }
         ]
     }
 ];
@@ -145,17 +173,17 @@ function updatePresentation() {
                 if (diff === 0) {
                     // Active line: center it properly
                     lineEl.classList.add('active');
-                    lineEl.style.transform = `translateY(-60px) scale(1.05)`;
+                    lineEl.style.transform = `translateY(-80px) scale(1.05)`;
                     lineEl.style.filter = `blur(0px)`;
                     lineEl.style.opacity = `1`;
                 } else if (diff < 0) {
                     // Past lines: slide up
-                    lineEl.style.transform = `translateY(${diff * 120 - 150}px) scale(${1 + diff * 0.03})`;
+                    lineEl.style.transform = `translateY(${diff * 120 - 180}px) scale(${1 + diff * 0.03})`;
                     lineEl.style.filter = `blur(${Math.min(10, Math.abs(diff) * 1.5)}px)`;
                     lineEl.style.opacity = `${Math.max(0, 1 - Math.abs(diff) * 0.25)}`;
                 } else {
                     // Future lines: slide down with gap
-                    lineEl.style.transform = `translateY(${diff * 120 + 200}px) scale(${1 - diff * 0.03})`;
+                    lineEl.style.transform = `translateY(${diff * 120 + 250}px) scale(${1 - diff * 0.03})`;
                     lineEl.style.filter = `blur(${Math.min(5, Math.abs(diff) * 0.5)}px)`;
                     lineEl.style.opacity = `${Math.max(0, 1 - diff * 0.25)}`;
                 }
