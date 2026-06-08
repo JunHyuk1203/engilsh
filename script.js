@@ -178,12 +178,12 @@ function updatePresentation() {
                     lineEl.style.opacity = `1`;
                 } else if (diff < 0) {
                     // Past lines: slide up
-                    lineEl.style.transform = `translateY(${diff * 120 - 180}px) scale(${1 + diff * 0.03})`;
+                    lineEl.style.transform = `translateY(${diff * 180 - 150}px) scale(${1 + diff * 0.03})`;
                     lineEl.style.filter = `blur(${Math.min(10, Math.abs(diff) * 1.5)}px)`;
                     lineEl.style.opacity = `${Math.max(0, 1 - Math.abs(diff) * 0.25)}`;
                 } else {
                     // Future lines: slide down with gap
-                    lineEl.style.transform = `translateY(${diff * 120 + 250}px) scale(${1 - diff * 0.03})`;
+                    lineEl.style.transform = `translateY(${diff * 180 + 250}px) scale(${1 - diff * 0.03})`;
                     lineEl.style.filter = `blur(${Math.min(5, Math.abs(diff) * 0.5)}px)`;
                     lineEl.style.opacity = `${Math.max(0, 1 - diff * 0.25)}`;
                 }
