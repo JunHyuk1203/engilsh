@@ -4,8 +4,399 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>영어 수행평가</title>
-    <link rel="stylesheet" href="style.css">
+    <style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+    background-color: #050505;
+    color: white;
+    overflow: hidden; /* Prevent scrolling, controlled by JS */
+    height: 100vh;
+    width: 100vw;
+}
+
+/* Thermal Imaging Art Blur Background */
+.bg-blur {
+    position: fixed;
+    top: -50%; left: -50%; width: 200%; height: 200%;
+    z-index: -1;
+    background: radial-gradient(circle at 30% 40%, rgba(200, 10, 84, 0.4), transparent 50%),
+                radial-gradient(circle at 70% 30%, rgba(200, 100, 0, 0.4), transparent 50%),
+                radial-gradient(circle at 40% 70%, rgba(150, 150, 0, 0.4), transparent 50%),
+                radial-gradient(circle at 60% 60%, rgba(0, 150, 0, 0.4), transparent 50%),
+                radial-gradient(circle at 50% 50%, rgba(0, 0, 150, 0.4), transparent 50%),
+                radial-gradient(circle at 20% 80%, rgba(0, 150, 150, 0.4), transparent 50%);
+    background-color: #0d0d14;
+    filter: blur(120px) saturate(120%);
+    opacity: 0.6;
+    animation: bgDrift 25s ease-in-out infinite alternate;
+}
+
+@keyframes bgDrift {
+    0% { transform: translate(0, 0) scale(1); }
+    100% { transform: translate(-5%, -5%) scale(1.1); }
+}
+
+#app {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Slide Base Setup */
+.slide {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    /* Chewy, bouncy animation curve */
+    transition: all 1s cubic-bezier(0.34, 1.3, 0.64, 1);
+    transform: translateY(100px) scale(0.9);
+}
+
+.slide.active {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0) scale(1);
+}
+
+.slide.past {
+    opacity: 0;
+    transform: translateY(-100px) scale(0.9);
+}
+
+/* Title Slide */
+.title {
+    font-size: 6rem;
+    font-weight: 800;
+    margin-bottom: 1rem;
+    text-align: center;
+    letter-spacing: -0.04em;
+    text-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    background: linear-gradient(135deg, #fff 0%, #a5a5a5 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+.subtitle {
+    font-size: 2rem;
+    font-weight: 400;
+    opacity: 0.8;
+    letter-spacing: -0.02em;
+}
+
+/* Intro Slide */
+.intro-slide {
+    flex-direction: row;
+    gap: 5rem;
+    max-width: 1200px;
+    padding: 0 2rem;
+}
+.album-cover {
+    width: 350px;
+    height: 350px;
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 30px 60px rgba(0,0,0,0.6);
+    flex-shrink: 0;
+}
+.album-cover img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.intro-info h2 {
+    font-size: 4rem;
+    margin-bottom: 0.5rem;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+}
+.intro-info h3 {
+    font-size: 2rem;
+    opacity: 0.7;
+    margin-bottom: 2.5rem;
+    font-weight: 400;
+}
+.grammar-box {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(40px);
+    -webkit-backdrop-filter: blur(40px);
+    padding: 2.5rem;
+    border-radius: 24px;
+    border: 1px solid rgba(255,255,255,0.1);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+}
+.grammar-box h4 {
+    font-size: 1.6rem;
+    margin-bottom: 1rem;
+    color: #ffde59;
+}
+.grammar-box p {
+    font-size: 1.15rem;
+    line-height: 1.6;
+    margin-bottom: 1.2rem;
+    opacity: 0.9;
+}
+.grammar-form {
+    background: rgba(0,0,0,0.4);
+    padding: 1.2rem;
+    border-radius: 12px;
+    margin-bottom: 0 !important;
+}
+
+/* Lyrics Slide */
+.lyrics-slide {
+    justify-content: center;
+    align-items: flex-start;
+    padding-left: 15%;
+}
+.lyrics-wrapper {
+    position: relative;
+    width: 100%;
+    max-width: 1000px;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.lyric-line {
+    position: absolute;
+    top: 50%;
+    width: 100%;
+    transition: all 0.9s cubic-bezier(0.34, 1.3, 0.64, 1);
+    transform-origin: center center;
+    color: rgba(255, 255, 255, 0.3);
+    text-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    display: flex;
+    flex-direction: column;
+    will-change: transform, filter, opacity;
+}
+
+.lyric-text {
+    font-size: 2.8rem;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.3;
+    white-space: nowrap;
+}
+
+.highlight-grammar {
+    position: relative;
+    display: inline-block;
+    color: #fff;
+}
+
+.highlight-grammar::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 100%;
+    height: 8px;
+    background-color: #ffde59;
+    border-radius: 4px;
+    box-shadow: 0 0 15px rgba(255, 222, 89, 0.4);
+}
+
+.lyric-note {
+    opacity: 0;
+    max-height: 0;
+    overflow: hidden;
+    transition: opacity 0.5s ease, max-height 0.5s ease, margin-top 0.5s ease;
+    transform-origin: top center;
+}
+
+.presentation-note {
+    margin-top: 6rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 2rem 2.5rem;
+    border-radius: 20px;
+    border-left: 6px solid #ffde59;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+}
+
+.note-point {
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+    font-size: 2.2rem;
+}
+
+.note-label {
+    background: #ffde59;
+    color: #000;
+    padding: 0.4rem 1.2rem;
+    border-radius: 12px;
+    font-weight: 800;
+    font-size: 1.6rem;
+    white-space: nowrap;
+}
+
+.note-value {
+    color: #fff;
+    font-weight: 600;
+    line-height: 1.3;
+    letter-spacing: -0.02em;
+    font-size: 1.8rem;
+}
+
+/* Active lyric state */
+.lyric-line.active {
+    color: rgba(255, 255, 255, 1);
+    z-index: 10;
+}
+.lyric-line.active .lyric-note {
+    opacity: 1;
+    max-height: 500px;
+    margin-top: 1rem;
+}
+
+/* Controls */
+.controls {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    display: flex;
+    gap: 1rem;
+    z-index: 100;
+}
+.controls button {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.2);
+    width: 60px;
+    height: 60px;
+    border-radius: 30px;
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+.controls button:hover {
+    background: rgba(255, 255, 255, 0.25);
+    transform: scale(1.1);
+}
+.controls button svg {
+    width: 28px;
+    height: 28px;
+}
+</style>
     <link rel="stylesheet" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+    <style>
+        /* Tooltip Styles for intuitive arrows (Like PPT) */
+        .highlight-group {
+            position: relative;
+            display: inline-block;
+            cursor: pointer;
+        }
+        
+        .lyric-highlight {
+            position: relative;
+            z-index: 1;
+            padding: 0 4px;
+            transition: all 0.3s ease;
+        }
+
+        .highlight-purple { border-bottom: 4px solid #a855f7; color: #fff; }
+        .highlight-blue { border-bottom: 4px solid #0ea5e9; color: #fff; }
+        .highlight-success { border-bottom: 4px solid #10b981; color: #fff; }
+        .highlight-warning { border-bottom: 4px solid #f59e0b; color: #fff; }
+
+        .lyric-line.active .annotation {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .annotation {
+            position: absolute;
+            font-size: 1.2rem;
+            font-weight: 700;
+            padding: 8px 16px;
+            border-radius: 12px;
+            background: rgba(15, 15, 35, 0.95);
+            backdrop-filter: blur(10px);
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.5s cubic-bezier(0.34, 1.3, 0.64, 1);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.6);
+            z-index: 20;
+            letter-spacing: -0.02em;
+        }
+
+        /* Positions */
+        .annotation.top {
+            bottom: calc(100% + 20px);
+            left: 50%;
+            transform: translateX(-50%) translateY(10px);
+        }
+        .lyric-line.active .annotation.top {
+            transform: translateX(-50%) translateY(0);
+        }
+        
+        .annotation.bottom {
+            top: calc(100% + 5px);
+            left: 50%;
+            transform: translateX(-50%) translateY(-10px);
+        }
+        .lyric-line.active .annotation.bottom {
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .annotation.right {
+            bottom: calc(100% + 20px);
+            left: 80%;
+            transform: translateX(-50%) translateY(10px);
+        }
+        .lyric-line.active .annotation.right {
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* Arrows */
+        .annotation::after {
+            content: '';
+            position: absolute;
+            border: 10px solid transparent;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .annotation.top::after, .annotation.right::after {
+            top: 100%;
+            border-top-color: rgba(15, 15, 35, 0.95);
+        }
+        .annotation.bottom::after {
+            bottom: 100%;
+            border-bottom-color: rgba(15, 15, 35, 0.95);
+        }
+
+        /* Colors */
+        .color-purple { color: #d8b4fe; border: 2px solid #a855f7; }
+        .color-blue { color: #bae6fd; border: 2px solid #0ea5e9; }
+        .color-success { color: #a7f3d0; border: 2px solid #10b981; }
+        .color-warning { color: #fde68a; border: 2px solid #f59e0b; }
+    </style>
 </head>
 <body>
     <div class="bg-blur"></div>
@@ -20,7 +411,7 @@
         <!-- Song 1 Intro -->
         <div id="slide-intro-0" class="slide intro-slide">
             <div class="album-cover">
-                <img src="images/cover_see_you_again.png" alt="See You Again">
+                <img src="images/cover_see_you_again.png" alt="See You Again" onerror="this.style.display='none'">
             </div>
             <div class="intro-info">
                 <h2>See You Again</h2>
@@ -34,15 +425,13 @@
 
         <!-- Song 1 Lyrics -->
         <div id="slide-lyrics-0" class="slide lyrics-slide">
-            <div class="lyrics-wrapper" id="lyrics-wrapper-0">
-                <!-- Lyrics will be injected here by JS -->
-            </div>
+            <div class="lyrics-wrapper" id="lyrics-wrapper-0"></div>
         </div>
 
         <!-- Song 2 Intro -->
         <div id="slide-intro-1" class="slide intro-slide">
             <div class="album-cover">
-                <img src="images/cover_thousand_years.jpg" alt="A Thousand Years">
+                <img src="images/cover_thousand_years.jpg" alt="A Thousand Years" onerror="this.style.display='none'">
             </div>
             <div class="intro-info">
                 <h2>A Thousand Years</h2>
@@ -56,9 +445,27 @@
 
         <!-- Song 2 Lyrics -->
         <div id="slide-lyrics-1" class="slide lyrics-slide">
-            <div class="lyrics-wrapper" id="lyrics-wrapper-1">
-                <!-- Lyrics will be injected here by JS -->
+            <div class="lyrics-wrapper" id="lyrics-wrapper-1"></div>
+        </div>
+
+        <!-- Song 3 Intro (New) -->
+        <div id="slide-intro-2" class="slide intro-slide">
+            <div class="album-cover">
+                <div style="width:100%; height:100%; background: linear-gradient(135deg, #a855f7, #0ea5e9); display: flex; align-items: center; justify-content: center; color: white; font-size: 5rem; font-weight: bold;">AJ</div>
             </div>
+            <div class="intro-info">
+                <h2>Like Strangers Do & We Are</h2>
+                <h3>AJ Mitchell</h3>
+                <div class="grammar-box">
+                    <h4>✨ 이유</h4>
+                    <p>이 가사는 노래의 핵심적인 감정을 담고 있다고 느꼈습니다. "우리가 함께가 아니라면 우린 뭐가 될까?"라는 문장에서 불안과 걱정이 담겼다고 생각하고 동시에 "영원한 것은 없다"는 것에서 차가운 현실을 표현했다고 생각하여 이 문장을 선정하였습니다.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Song 3 Lyrics -->
+        <div id="slide-lyrics-2" class="slide lyrics-slide">
+            <div class="lyrics-wrapper" id="lyrics-wrapper-2"></div>
         </div>
     </div>
 
@@ -72,6 +479,263 @@
         </button>
     </div>
 
-    <script src="script.js"></script>
+    <script>
+// Presentation Data with Lyrics and Grammar Points
+const songsData = [
+    {
+        lyrics: [
+            { 
+                textHtml: "<span class='highlight-group'><span class='lyric-highlight highlight-purple'>It's been a long day</span><div class='annotation bottom color-purple'>It(S) + 's been(V) + a long day(C)</div></span> without you, my friend", 
+                points: [
+                    { label: "문법", value: "2형식 문장의 현재완료: 주어(It)와 보어(day)가 현재완료 동사(has been)로 연결되었습니다." }
+                ]
+            },
+            { 
+                textHtml: "And <span class='highlight-group'><span class='lyric-highlight highlight-blue'>I'll tell you all</span><div class='annotation bottom color-blue'>I(S) + 'll tell(V) + you(IO) + all(DO)</div></span> about it <span class='highlight-group'><span class='lyric-highlight highlight-success'>when I see you</span><div class='annotation bottom color-success'>when(접속사) + I(S) + see(V) + you(O)</div></span> again", 
+                points: [
+                    { label: "주절", value: "4형식 문장: 주어(I)가 간접목적어(you)에게 직접목적어(all)를 말해줍니다." },
+                    { label: "종속절", value: "시간의 부사절: when 절 안에서는 미래의 일도 현재 시제(see)로 씁니다." }
+                ]
+            },
+            { 
+                textHtml: "<span class='highlight-group'><span class='lyric-highlight highlight-purple'>We've come</span><div class='annotation bottom color-purple'>We(S) + 've come(V)</div></span> a long way from <span class='highlight-group'><span class='lyric-highlight highlight-warning'>where we began</span><div class='annotation bottom color-warning'>where(관계부사) + we(S) + began(V)</div></span>", 
+                points: [
+                    { label: "문법", value: "1형식 문장(S+V)과 전치사 from의 목적어로 쓰인 관계부사(where)절입니다." }
+                ]
+            },
+            { 
+                textHtml: "Oh, <span class='highlight-group'><span class='lyric-highlight highlight-blue'>I'll tell you</span><div class='annotation bottom color-blue'>I(S) + 'll tell(V) + you(IO)</div></span> all about it when I see you again", 
+                points: [
+                    { label: "표현", value: "조동사 will: 내가 모든 걸 다 말해 '줄게'라는 화자의 강한 의지를 나타냅니다." }
+                ]
+            },
+            { 
+                textHtml: "<span class='highlight-group'><span class='lyric-highlight highlight-success'>When I see you</span><div class='annotation bottom color-success'>When(접속사) + I(S) + see(V) + you(O)</div></span> again", 
+                points: [
+                    { label: "구문", value: "부사절의 단독 사용: 다시 만나게 될 '그때'를 짙은 그리움과 함께 강조합니다." }
+                ]
+            }
+        ]
+    },
+    {
+        lyrics: [
+            { 
+                textHtml: "<span class='highlight-group'><span class='lyric-highlight highlight-purple'>Heart beats</span><div class='annotation bottom color-purple'>Heart(S) + beats(V)</div></span> fast", 
+                points: [
+                    { label: "문법", value: "1형식 문장: Heart(심장)가 3인칭 단수이므로 동사 beat에 s가 붙습니다." }
+                ]
+            },
+            { 
+                textHtml: "<span class='highlight-group'><span class='lyric-highlight highlight-blue'>How to be brave</span><div class='annotation bottom color-blue'>의문사 + to be(V) + brave(C)</div></span>?", 
+                points: [
+                    { label: "구문", value: "의문사 + to부정사 명사구: '어떻게 용감해져야 할지'로 해석됩니다." }
+                ]
+            },
+            { 
+                textHtml: "How <span class='highlight-group'><span class='lyric-highlight highlight-purple'>can I love</span><div class='annotation bottom color-purple'>can(조동사) + I(S) + love(V)</div></span> <span class='highlight-group'><span class='lyric-highlight highlight-success'>when I'm afraid</span><div class='annotation bottom color-success'>when(접속사) + I(S) + 'm(V) + afraid(C)</div></span> to fall?", 
+                points: [
+                    { label: "문법", value: "의문문(조동사+S+V)과 시간의 부사절(추락하는 것을 두려워'할 때')이 결합되었습니다." }
+                ]
+            },
+            { 
+                textHtml: "But <span class='highlight-group'><span class='lyric-highlight highlight-warning'>watching you stand</span><div class='annotation bottom color-warning'>watching(지각동사) + you(O) + stand(OC)</div></span> alone", 
+                points: [
+                    { label: "문법", value: "지각동사의 5형식 구조: watch(지각동사) + you(목적어) + stand(목적격 보어로 쓰인 동사원형)." }
+                ]
+            },
+            { 
+                textHtml: "<span class='highlight-group'><span class='lyric-highlight highlight-purple'>All of my doubt suddenly goes</span><div class='annotation bottom color-purple'>All of my doubt(S) + goes(V)</div></span> away", 
+                points: [
+                    { label: "수일치", value: "1형식 문장: doubt(의심)가 셀 수 없는 명사이므로, 전체(All)라도 단수 동사 goes를 씁니다." }
+                ]
+            }
+        ]
+    },
+    {
+        // 3rd Song (New)
+        lyrics: [
+            { 
+                textHtml: "You and me, <span class='highlight-group'><span class='lyric-highlight highlight-purple'>what we are</span><div class='annotation bottom color-purple'>what(C) + we(S) + are(V)</div></span>",
+                points: [
+                    { label: "문법", value: "간접의문문 명사절: 의문사가 보어 역할을 하며 주어+동사 어순입니다." }
+                ]
+            },
+            { 
+                textHtml: "<span class='highlight-group'><span class='lyric-highlight highlight-blue'>if</span><div class='annotation bottom color-blue'>if(접속사) + we(S) + 're(V) + together(C)</div></span> we're not together?",
+                points: [
+                    { label: "문법", value: "조건 부사절: if가 이끄는 절 안에서 we가 주어, 're가 동사입니다." }
+                ]
+            },
+            { 
+                textHtml: "It <span class='highlight-group'><span class='lyric-highlight highlight-success'>could be</span><div class='annotation bottom color-success'>It(S) + could be(V) + nothing(C)</div></span> nothing <span class='highlight-group'><span class='lyric-highlight highlight-warning'>'cause nothing lasts forever'</span><div class='annotation bottom color-warning'>'cause(접속사) + nothing(S) + lasts(V)</div></span>.",
+                points: [
+                    { label: "주절", value: "2형식 문장: 주어(It)와 보어(nothing)가 동사(could be)로 연결됩니다." },
+                    { label: "종속절", value: "이유 부사절: 'cause 절 안에서 nothing이 주어, lasts가 1형식 동사입니다." }
+                ]
+            }
+        ]
+    }
+];
+
+// 1. Initialize DOM for Lyrics
+songsData.forEach((song, songIdx) => {
+    const wrapper = document.getElementById(`lyrics-wrapper-${songIdx}`);
+    if(!wrapper) return;
+
+    song.lyrics.forEach((lyric, lyricIdx) => {
+        const line = document.createElement('div');
+        line.className = 'lyric-line';
+        line.id = `lyric-${songIdx}-${lyricIdx}`;
+        
+        const text = document.createElement('div');
+        text.className = 'lyric-text';
+        text.innerHTML = lyric.textHtml;
+        line.appendChild(text);
+
+        if (lyric.points && lyric.points.length > 0) {
+            const note = document.createElement('div');
+            note.className = 'lyric-note';
+            
+            let pointsHtml = '<div class="presentation-note">';
+            lyric.points.forEach(pt => {
+                pointsHtml += `
+                    <div class="note-point">
+                        <span class="note-label">${pt.label}</span>
+                        <span class="note-value">${pt.value}</span>
+                    </div>
+                `;
+            });
+            pointsHtml += '</div>';
+            
+            note.innerHTML = pointsHtml;
+            line.appendChild(note);
+        }
+
+        wrapper.appendChild(line);
+    });
+});
+
+// 2. Define the exact sequence of steps for the presentation
+const steps = [
+    { type: 'slide', id: 'slide-title' },
+    { type: 'slide', id: 'slide-intro-0' }
+];
+
+// Add lyrics lines as individual steps for Song 1
+songsData[0].lyrics.forEach((_, i) => {
+    steps.push({ type: 'lyric', songIdx: 0, lyricIdx: i });
+});
+
+steps.push({ type: 'slide', id: 'slide-intro-1' });
+
+// Add lyrics lines as individual steps for Song 2
+songsData[1].lyrics.forEach((_, i) => {
+    steps.push({ type: 'lyric', songIdx: 1, lyricIdx: i });
+});
+
+steps.push({ type: 'slide', id: 'slide-intro-2' });
+
+// Add lyrics lines as individual steps for Song 3
+if(songsData[2]) {
+    songsData[2].lyrics.forEach((_, i) => {
+        steps.push({ type: 'lyric', songIdx: 2, lyricIdx: i });
+    });
+}
+
+let currentStep = 0;
+
+// 3. Update Function
+function updatePresentation() {
+    const step = steps[currentStep];
+
+    // Handle overall slide visibility
+    document.querySelectorAll('.slide').forEach((el) => {
+        // Determine the logical index of this slide block in the steps array
+        let stepIndexForSlide = steps.findIndex(s => s.id === el.id);
+        if (stepIndexForSlide === -1) {
+            if (el.id === 'slide-lyrics-0') stepIndexForSlide = steps.findIndex(s => s.type === 'lyric' && s.songIdx === 0);
+            if (el.id === 'slide-lyrics-1') stepIndexForSlide = steps.findIndex(s => s.type === 'lyric' && s.songIdx === 1);
+            if (el.id === 'slide-lyrics-2') stepIndexForSlide = steps.findIndex(s => s.type === 'lyric' && s.songIdx === 2);
+        }
+        
+        el.classList.remove('active', 'past');
+        
+        if (step.type === 'slide' && step.id === el.id) {
+            el.classList.add('active');
+        } else if (step.type === 'lyric' && el.id === `slide-lyrics-${step.songIdx}`) {
+            el.classList.add('active');
+        } else if (stepIndexForSlide !== -1 && stepIndexForSlide < currentStep) {
+            el.classList.add('past');
+        }
+    });
+
+    // Handle internal lyric positioning (Apple Music Style)
+    songsData.forEach((song, sIdx) => {
+        song.lyrics.forEach((_, lIdx) => {
+            const lineEl = document.getElementById(`lyric-${sIdx}-${lIdx}`);
+            if(!lineEl) return;
+            let isActiveSlide = step.type === 'lyric' && step.songIdx === sIdx;
+            
+            if (isActiveSlide) {
+                const diff = lIdx - step.lyricIdx;
+                lineEl.className = 'lyric-line'; // Reset classes
+                
+                if (diff === 0) {
+                    // Active line: centered
+                    lineEl.classList.add('active');
+                    lineEl.style.transform = `translateY(calc(-50% - 100px)) scale(1.05)`;
+                    lineEl.style.filter = `blur(0px)`;
+                    lineEl.style.opacity = `1`;
+                } else if (diff < 0) {
+                    // Past lines: far above, no overlap
+                    lineEl.style.transform = `translateY(calc(-50% + ${diff * 150 - 300}px)) scale(${1 + diff * 0.03})`;
+                    lineEl.style.filter = `blur(${Math.min(10, Math.abs(diff) * 2)}px)`;
+                    lineEl.style.opacity = `${Math.max(0, 0.6 - Math.abs(diff) * 0.3)}`;
+                } else {
+                    // Future lines: far below, no overlap with annotation/note
+                    lineEl.style.transform = `translateY(calc(-50% + ${diff * 150 + 500}px)) scale(${1 - diff * 0.03})`;
+                    lineEl.style.filter = `blur(${Math.min(5, Math.abs(diff) * 1)}px)`;
+                    lineEl.style.opacity = `${Math.max(0, 0.5 - diff * 0.25)}`;
+                }
+            } else {
+                // Reset styling
+                lineEl.style.transform = `translateY(calc(-50% + ${lIdx * 100}px)) scale(0.9)`;
+                lineEl.style.filter = `blur(4px)`;
+                lineEl.style.opacity = `0`;
+                lineEl.classList.remove('active');
+            }
+        });
+    });
+}
+
+// 4. Event Listeners
+function goNext() {
+    if (currentStep < steps.length - 1) {
+        currentStep++;
+        updatePresentation();
+    }
+}
+
+function goPrev() {
+    if (currentStep > 0) {
+        currentStep--;
+        updatePresentation();
+    }
+}
+
+document.getElementById('next-btn').addEventListener('click', goNext);
+document.getElementById('prev-btn').addEventListener('click', goPrev);
+
+window.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === 'Space' || e.key === 'ArrowDown') {
+        goNext();
+    } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+        goPrev();
+    }
+});
+
+// Start the presentation
+updatePresentation();
+    </script>
 </body>
 </html>

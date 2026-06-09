@@ -77,12 +77,38 @@ const songsData = [
                 ]
             }
         ]
+    },
+    {
+        // 3rd Song (New)
+        lyrics: [
+            { 
+                textHtml: "You and me, <span class='highlight-group'><span class='lyric-highlight highlight-purple'>what we are</span><div class='annotation bottom color-purple'>what(C) + we(S) + are(V)</div></span>",
+                points: [
+                    { label: "문법", value: "간접의문문 명사절: 의문사가 보어 역할을 하며 주어+동사 어순입니다." }
+                ]
+            },
+            { 
+                textHtml: "<span class='highlight-group'><span class='lyric-highlight highlight-blue'>if</span><div class='annotation bottom color-blue'>if(접속사) + we(S) + 're(V) + together(C)</div></span> we're not together?",
+                points: [
+                    { label: "문법", value: "조건 부사절: if가 이끄는 절 안에서 we가 주어, 're가 동사입니다." }
+                ]
+            },
+            { 
+                textHtml: "It <span class='highlight-group'><span class='lyric-highlight highlight-success'>could be</span><div class='annotation bottom color-success'>It(S) + could be(V) + nothing(C)</div></span> nothing <span class='highlight-group'><span class='lyric-highlight highlight-warning'>'cause nothing lasts forever'</span><div class='annotation bottom color-warning'>'cause(접속사) + nothing(S) + lasts(V)</div></span>.",
+                points: [
+                    { label: "주절", value: "2형식 문장: 주어(It)와 보어(nothing)가 동사(could be)로 연결됩니다." },
+                    { label: "종속절", value: "이유 부사절: 'cause 절 안에서 nothing이 주어, lasts가 1형식 동사입니다." }
+                ]
+            }
+        ]
     }
 ];
 
 // 1. Initialize DOM for Lyrics
 songsData.forEach((song, songIdx) => {
     const wrapper = document.getElementById(`lyrics-wrapper-${songIdx}`);
+    if(!wrapper) return;
+
     song.lyrics.forEach((lyric, lyricIdx) => {
         const line = document.createElement('div');
         line.className = 'lyric-line';
@@ -134,6 +160,15 @@ songsData[1].lyrics.forEach((_, i) => {
     steps.push({ type: 'lyric', songIdx: 1, lyricIdx: i });
 });
 
+steps.push({ type: 'slide', id: 'slide-intro-2' });
+
+// Add lyrics lines as individual steps for Song 3
+if(songsData[2]) {
+    songsData[2].lyrics.forEach((_, i) => {
+        steps.push({ type: 'lyric', songIdx: 2, lyricIdx: i });
+    });
+}
+
 let currentStep = 0;
 
 // 3. Update Function
@@ -147,6 +182,7 @@ function updatePresentation() {
         if (stepIndexForSlide === -1) {
             if (el.id === 'slide-lyrics-0') stepIndexForSlide = steps.findIndex(s => s.type === 'lyric' && s.songIdx === 0);
             if (el.id === 'slide-lyrics-1') stepIndexForSlide = steps.findIndex(s => s.type === 'lyric' && s.songIdx === 1);
+            if (el.id === 'slide-lyrics-2') stepIndexForSlide = steps.findIndex(s => s.type === 'lyric' && s.songIdx === 2);
         }
         
         el.classList.remove('active', 'past');
@@ -164,6 +200,7 @@ function updatePresentation() {
     songsData.forEach((song, sIdx) => {
         song.lyrics.forEach((_, lIdx) => {
             const lineEl = document.getElementById(`lyric-${sIdx}-${lIdx}`);
+            if(!lineEl) return;
             let isActiveSlide = step.type === 'lyric' && step.songIdx === sIdx;
             
             if (isActiveSlide) {
