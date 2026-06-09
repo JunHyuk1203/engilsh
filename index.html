@@ -683,23 +683,23 @@ function updatePresentation() {
                 if (diff === 0) {
                     // Active line: centered
                     lineEl.classList.add('active');
-                    lineEl.style.transform = `translateY(calc(-50% - 100px)) scale(1.05)`;
+                    lineEl.style.transform = `translateY(-120px) scale(1.05)`;
                     lineEl.style.filter = `blur(0px)`;
                     lineEl.style.opacity = `1`;
                 } else if (diff < 0) {
-                    // Past lines: far above, no overlap
-                    lineEl.style.transform = `translateY(calc(-50% + ${diff * 150 - 300}px)) scale(${1 + diff * 0.03})`;
+                    // Past lines: far above
+                    lineEl.style.transform = `translateY(${diff * 150 - 350}px) scale(${1 + diff * 0.03})`;
                     lineEl.style.filter = `blur(${Math.min(10, Math.abs(diff) * 2)}px)`;
                     lineEl.style.opacity = `${Math.max(0, 0.6 - Math.abs(diff) * 0.3)}`;
                 } else {
                     // Future lines: far below, no overlap with annotation/note
-                    lineEl.style.transform = `translateY(calc(-50% + ${diff * 150 + 500}px)) scale(${1 - diff * 0.03})`;
+                    lineEl.style.transform = `translateY(${diff * 150 + 350}px) scale(${1 - diff * 0.03})`;
                     lineEl.style.filter = `blur(${Math.min(5, Math.abs(diff) * 1)}px)`;
                     lineEl.style.opacity = `${Math.max(0, 0.5 - diff * 0.25)}`;
                 }
             } else {
                 // Reset styling
-                lineEl.style.transform = `translateY(calc(-50% + ${lIdx * 100}px)) scale(0.9)`;
+                lineEl.style.transform = `translateY(${lIdx * 100}px) scale(0.9)`;
                 lineEl.style.filter = `blur(4px)`;
                 lineEl.style.opacity = `0`;
                 lineEl.classList.remove('active');
