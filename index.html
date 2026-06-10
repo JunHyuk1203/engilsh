@@ -301,6 +301,119 @@ body {
     width: 28px;
     height: 28px;
 }
+
+/* Movie Slides */
+.movie-intro-slide {
+    flex-direction: row;
+    gap: 5rem;
+    max-width: 1200px;
+    padding: 0 2rem;
+}
+.movie-poster {
+    width: 280px;
+    height: 400px;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 30px 60px rgba(0,0,0,0.6);
+    flex-shrink: 0;
+    background: rgba(255,255,255,0.05);
+    border: 2px dashed rgba(255,255,255,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(255,255,255,0.3);
+    font-size: 1.2rem;
+}
+.movie-poster img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.movie-info h2 {
+    font-size: 3.5rem;
+    margin-bottom: 0.5rem;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+}
+.movie-info h3 {
+    font-size: 1.6rem;
+    opacity: 0.6;
+    margin-bottom: 2rem;
+    font-weight: 400;
+}
+.movie-reason-box {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(40px);
+    -webkit-backdrop-filter: blur(40px);
+    padding: 2.5rem;
+    border-radius: 24px;
+    border: 1px solid rgba(255,255,255,0.1);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+}
+.movie-reason-box h4 {
+    font-size: 1.6rem;
+    margin-bottom: 1rem;
+    color: #f97316;
+}
+.movie-reason-box p {
+    font-size: 1.15rem;
+    line-height: 1.6;
+    opacity: 0.9;
+    min-height: 3rem;
+}
+
+/* Movie Content Slide */
+.movie-content-slide {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 5rem;
+    gap: 2rem;
+}
+.movie-gif-area {
+    width: 100%;
+    max-width: 800px;
+    height: 350px;
+    border-radius: 20px;
+    overflow: hidden;
+    background: rgba(255,255,255,0.03);
+    border: 2px dashed rgba(255,255,255,0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(255,255,255,0.25);
+    font-size: 1.3rem;
+    flex-shrink: 0;
+}
+.movie-gif-area img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+.movie-explain-area {
+    width: 100%;
+    max-width: 800px;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 2rem 2.5rem;
+    border-radius: 20px;
+    border-left: 6px solid #f97316;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+}
+.movie-explain-area h4 {
+    font-size: 1.8rem;
+    font-weight: 800;
+    margin-bottom: 1rem;
+    color: #fb923c;
+    min-height: 2rem;
+}
+.movie-explain-area p {
+    font-size: 1.4rem;
+    line-height: 1.7;
+    color: rgba(255,255,255,0.9);
+    min-height: 3rem;
+}
 </style>
     <link rel="stylesheet" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
     <style>
@@ -408,17 +521,69 @@ body {
             <p class="subtitle">팝송으로 마스터하는 핵심 영문법</p>
         </div>
 
+        <!-- Movie Intro Slide -->
+        <div id="slide-movie-intro" class="slide movie-intro-slide">
+            <div class="movie-poster">
+                <!-- 영화 포스터 이미지를 여기에 넣으세요 -->
+                <span>🎬 포스터</span>
+            </div>
+            <div class="movie-info">
+                <h2><!-- 영화 제목 --></h2>
+                <h3><!-- 감독 / 연도 --></h3>
+                <div class="movie-reason-box">
+                    <h4>🎯 선정 이유</h4>
+                    <p><!-- 선정 이유를 여기에 작성하세요 --></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Movie Content Slide 1 -->
+        <div id="slide-movie-1" class="slide movie-content-slide">
+            <div class="movie-gif-area">
+                <!-- GIF 이미지를 여기에 넣으세요 -->
+                <span>🎞️ GIF / 장면 이미지</span>
+            </div>
+            <div class="movie-explain-area">
+                <h4><!-- 대사 또는 문법 포인트 --></h4>
+                <p><!-- 설명을 여기에 작성하세요 --></p>
+            </div>
+        </div>
+
+        <!-- Movie Content Slide 2 -->
+        <div id="slide-movie-2" class="slide movie-content-slide">
+            <div class="movie-gif-area">
+                <!-- GIF 이미지를 여기에 넣으세요 -->
+                <span>🎞️ GIF / 장면 이미지</span>
+            </div>
+            <div class="movie-explain-area">
+                <h4><!-- 대사 또는 문법 포인트 --></h4>
+                <p><!-- 설명을 여기에 작성하세요 --></p>
+            </div>
+        </div>
+
+        <!-- Movie Content Slide 3 -->
+        <div id="slide-movie-3" class="slide movie-content-slide">
+            <div class="movie-gif-area">
+                <!-- GIF 이미지를 여기에 넣으세요 -->
+                <span>🎞️ GIF / 장면 이미지</span>
+            </div>
+            <div class="movie-explain-area">
+                <h4><!-- 대사 또는 문법 포인트 --></h4>
+                <p><!-- 설명을 여기에 작성하세요 --></p>
+            </div>
+        </div>
+
         <!-- Song 1 Intro -->
         <div id="slide-intro-0" class="slide intro-slide">
             <div class="album-cover">
-                <img src="images/cover_see_you_again.png" alt="See You Again" onerror="this.style.display='none'">
+                <img src="images/cover_gangstas_paradise.jpg" alt="Gangsta's Paradise" onerror="this.style.display='none'">
             </div>
             <div class="intro-info">
-                <h2>See You Again</h2>
-                <h3>Wiz Khalifa (feat. Charlie Puth)</h3>
+                <h2>Gangsta's Paradise</h2>
+                <h3>Coolio</h3>
                 <div class="grammar-box">
-                    <h4>✨ 이 노래의 핵심 문법</h4>
-                    <p>현재완료 시제, 관계대명사 that, 부사절 접속사 등 일상 회화에서 감정을 깊이 있게 표현할 때 꼭 필요한 필수 구문들이 가득합니다.</p>
+                    <h4>✨ 곡 선정 이유</h4>
+                    <p>위 노래 제목이 멋진 갱스터들의 이야기를 보여주는 게 아닌 폭력과 빈곤 속에서 살아가는 사람들의 현실과 악순환을 보여준다는 반어법으로 사용된다는 것을 이유로 선정하였습니다.</p>
                 </div>
             </div>
         </div>
@@ -618,6 +783,10 @@ songsData.forEach((song, songIdx) => {
 // 2. Define the exact sequence of steps for the presentation
 const steps = [
     { type: 'slide', id: 'slide-title' },
+    { type: 'slide', id: 'slide-movie-intro' },
+    { type: 'slide', id: 'slide-movie-1' },
+    { type: 'slide', id: 'slide-movie-2' },
+    { type: 'slide', id: 'slide-movie-3' },
     { type: 'slide', id: 'slide-intro-0' }
 ];
 
