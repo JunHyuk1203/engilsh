@@ -1,421 +1,464 @@
 <!DOCTYPE html>
 <html lang="ko">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>영어 수행평가</title>
     <style>
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
-body {
-    font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
-    background-color: #050505;
-    color: white;
-    overflow: hidden; /* Prevent scrolling, controlled by JS */
-    height: 100vh;
-    width: 100vw;
-}
+        body {
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+            background-color: #050505;
+            color: white;
+            overflow: hidden;
+            /* Prevent scrolling, controlled by JS */
+            height: 100vh;
+            width: 100vw;
+        }
 
-/* Thermal Imaging Art Blur Background */
-.bg-blur {
-    position: fixed;
-    top: -50%; left: -50%; width: 200%; height: 200%;
-    z-index: -1;
-    background: radial-gradient(circle at 30% 40%, rgba(200, 10, 84, 0.4), transparent 50%),
+        /* Thermal Imaging Art Blur Background */
+        .bg-blur {
+            position: fixed;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            z-index: -1;
+            background: radial-gradient(circle at 30% 40%, rgba(200, 10, 84, 0.4), transparent 50%),
                 radial-gradient(circle at 70% 30%, rgba(200, 100, 0, 0.4), transparent 50%),
                 radial-gradient(circle at 40% 70%, rgba(150, 150, 0, 0.4), transparent 50%),
                 radial-gradient(circle at 60% 60%, rgba(0, 150, 0, 0.4), transparent 50%),
                 radial-gradient(circle at 50% 50%, rgba(0, 0, 150, 0.4), transparent 50%),
                 radial-gradient(circle at 20% 80%, rgba(0, 150, 150, 0.4), transparent 50%);
-    background-color: #0d0d14;
-    filter: blur(120px) saturate(120%);
-    opacity: 0.6;
-    animation: bgDrift 25s ease-in-out infinite alternate;
-}
+            background-color: #0d0d14;
+            filter: blur(120px) saturate(120%);
+            opacity: 0.6;
+            animation: bgDrift 25s ease-in-out infinite alternate;
+        }
 
-@keyframes bgDrift {
-    0% { transform: translate(0, 0) scale(1); }
-    100% { transform: translate(-5%, -5%) scale(1.1); }
-}
+        @keyframes bgDrift {
+            0% {
+                transform: translate(0, 0) scale(1);
+            }
 
-#app {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
+            100% {
+                transform: translate(-5%, -5%) scale(1.1);
+            }
+        }
 
-/* Slide Base Setup */
-.slide {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    pointer-events: none;
-    /* Chewy, bouncy animation curve */
-    transition: all 1s cubic-bezier(0.34, 1.3, 0.64, 1);
-    transform: translateY(100px) scale(0.9);
-}
+        #app {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
 
-.slide.active {
-    opacity: 1;
-    pointer-events: auto;
-    transform: translateY(0) scale(1);
-}
+        /* Slide Base Setup */
+        .slide {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            /* Chewy, bouncy animation curve */
+            transition: all 1s cubic-bezier(0.34, 1.3, 0.64, 1);
+            transform: translateY(100px) scale(0.9);
+        }
 
-.slide.past {
-    opacity: 0;
-    transform: translateY(-100px) scale(0.9);
-}
+        .slide.active {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateY(0) scale(1);
+        }
 
-/* Title Slide */
-.title {
-    font-size: 6rem;
-    font-weight: 800;
-    margin-bottom: 1rem;
-    text-align: center;
-    letter-spacing: -0.04em;
-    text-shadow: 0 10px 30px rgba(0,0,0,0.5);
-    background: linear-gradient(135deg, #fff 0%, #a5a5a5 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
-.subtitle {
-    font-size: 2rem;
-    font-weight: 400;
-    opacity: 0.8;
-    letter-spacing: -0.02em;
-}
+        .slide.past {
+            opacity: 0;
+            transform: translateY(-100px) scale(0.9);
+        }
 
-/* Intro Slide */
-.intro-slide {
-    flex-direction: row;
-    gap: 5rem;
-    max-width: 1200px;
-    padding: 0 2rem;
-}
-.album-cover {
-    width: 350px;
-    height: 350px;
-    border-radius: 24px;
-    overflow: hidden;
-    box-shadow: 0 30px 60px rgba(0,0,0,0.6);
-    flex-shrink: 0;
-}
-.album-cover img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-.intro-info h2 {
-    font-size: 4rem;
-    margin-bottom: 0.5rem;
-    letter-spacing: -0.03em;
-    line-height: 1.1;
-}
-.intro-info h3 {
-    font-size: 2rem;
-    opacity: 0.7;
-    margin-bottom: 2.5rem;
-    font-weight: 400;
-}
-.grammar-box {
-    background: rgba(255, 255, 255, 0.05);
-    backdrop-filter: blur(40px);
-    -webkit-backdrop-filter: blur(40px);
-    padding: 2.5rem;
-    border-radius: 24px;
-    border: 1px solid rgba(255,255,255,0.1);
-    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-}
-.grammar-box h4 {
-    font-size: 1.6rem;
-    margin-bottom: 1rem;
-    color: #ffde59;
-}
-.grammar-box p {
-    font-size: 1.15rem;
-    line-height: 1.6;
-    margin-bottom: 1.2rem;
-    opacity: 0.9;
-}
-.grammar-form {
-    background: rgba(0,0,0,0.4);
-    padding: 1.2rem;
-    border-radius: 12px;
-    margin-bottom: 0 !important;
-}
+        /* Title Slide */
+        .title {
+            font-size: 6rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            text-align: center;
+            letter-spacing: -0.04em;
+            text-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            background: linear-gradient(135deg, #fff 0%, #a5a5a5 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
 
-/* Lyrics Slide */
-.lyrics-slide {
-    justify-content: center;
-    align-items: flex-start;
-    padding-left: 15%;
-}
-.lyrics-wrapper {
-    position: relative;
-    width: 100%;
-    max-width: 1000px;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-}
+        .subtitle {
+            font-size: 2rem;
+            font-weight: 400;
+            opacity: 0.8;
+            letter-spacing: -0.02em;
+        }
 
-.lyric-line {
-    position: absolute;
-    top: 50%;
-    width: 100%;
-    transition: all 0.9s cubic-bezier(0.34, 1.3, 0.64, 1);
-    transform-origin: center center;
-    color: rgba(255, 255, 255, 0.3);
-    text-shadow: 0 4px 20px rgba(0,0,0,0.3);
-    display: flex;
-    flex-direction: column;
-    will-change: transform, filter, opacity;
-}
+        /* Intro Slide */
+        .intro-slide {
+            flex-direction: row;
+            gap: 5rem;
+            max-width: 1200px;
+            padding: 0 2rem;
+        }
 
-.lyric-text {
-    font-size: 2.8rem;
-    font-weight: 800;
-    letter-spacing: -0.03em;
-    line-height: 1.3;
-    white-space: nowrap;
-}
+        .album-cover {
+            width: 480px;
+            height: 480px;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6);
+            flex-shrink: 0;
+        }
 
-.highlight-grammar {
-    position: relative;
-    display: inline-block;
-    color: #fff;
-}
+        .album-cover img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
 
-.highlight-grammar::after {
-    content: '';
-    position: absolute;
-    bottom: -5px;
-    left: 0;
-    width: 100%;
-    height: 8px;
-    background-color: #ffde59;
-    border-radius: 4px;
-    box-shadow: 0 0 15px rgba(255, 222, 89, 0.4);
-}
+        .intro-info h2 {
+            font-size: 5rem;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.03em;
+            line-height: 1.1;
+        }
 
-.lyric-note {
-    opacity: 0;
-    max-height: 0;
-    overflow: hidden;
-    transition: opacity 0.5s ease, max-height 0.5s ease, margin-top 0.5s ease;
-    transform-origin: top center;
-}
+        .intro-info h3 {
+            font-size: 2.5rem;
+            opacity: 0.7;
+            margin-bottom: 2.5rem;
+            font-weight: 400;
+        }
 
-.presentation-note {
-    margin-top: 6rem;
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-    background: rgba(0, 0, 0, 0.5);
-    padding: 2rem 2.5rem;
-    border-radius: 20px;
-    border-left: 6px solid #ffde59;
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-}
+        .grammar-box {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(40px);
+            -webkit-backdrop-filter: blur(40px);
+            padding: 2.5rem;
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
 
-.note-point {
-    display: flex;
-    align-items: center;
-    gap: 1.2rem;
-    font-size: 2.2rem;
-}
+        .grammar-box h4 {
+            font-size: 2.2rem;
+            margin-bottom: 1rem;
+            color: #ffde59;
+        }
 
-.note-label {
-    background: #ffde59;
-    color: #000;
-    padding: 0.4rem 1.2rem;
-    border-radius: 12px;
-    font-weight: 800;
-    font-size: 1.6rem;
-    white-space: nowrap;
-}
+        .grammar-box p {
+            font-size: 1.8rem;
+            line-height: 1.6;
+            margin-bottom: 1.2rem;
+            opacity: 0.9;
+        }
 
-.note-value {
-    color: #fff;
-    font-weight: 600;
-    line-height: 1.3;
-    letter-spacing: -0.02em;
-    font-size: 1.8rem;
-}
+        .grammar-form {
+            background: rgba(0, 0, 0, 0.4);
+            padding: 1.2rem;
+            border-radius: 12px;
+            margin-bottom: 0 !important;
+        }
 
-/* Active lyric state */
-.lyric-line.active {
-    color: rgba(255, 255, 255, 1);
-    z-index: 10;
-}
-.lyric-line.active .lyric-note {
-    opacity: 1;
-    max-height: 500px;
-    margin-top: 1rem;
-}
+        /* Lyrics Slide */
+        .lyrics-slide {
+            justify-content: center;
+            align-items: flex-start;
+            padding-left: 15%;
+        }
 
-/* Controls */
-.controls {
-    position: fixed;
-    bottom: 2rem;
-    right: 2rem;
-    display: flex;
-    gap: 1rem;
-    z-index: 100;
-}
-.controls button {
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border: 1px solid rgba(255,255,255,0.2);
-    width: 60px;
-    height: 60px;
-    border-radius: 30px;
-    color: white;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.3s ease;
-}
-.controls button:hover {
-    background: rgba(255, 255, 255, 0.25);
-    transform: scale(1.1);
-}
-.controls button svg {
-    width: 28px;
-    height: 28px;
-}
+        .lyrics-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 1000px;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
 
-/* Movie Slides */
-.movie-intro-slide {
-    flex-direction: row;
-    gap: 5rem;
-    max-width: 1200px;
-    padding: 0 2rem;
-}
-.movie-poster {
-    width: 280px;
-    height: 400px;
-    border-radius: 20px;
-    overflow: hidden;
-    box-shadow: 0 30px 60px rgba(0,0,0,0.6);
-    flex-shrink: 0;
-    background: rgba(255,255,255,0.05);
-    border: 2px dashed rgba(255,255,255,0.2);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: rgba(255,255,255,0.3);
-    font-size: 1.2rem;
-}
-.movie-poster img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-.movie-info h2 {
-    font-size: 3.5rem;
-    margin-bottom: 0.5rem;
-    letter-spacing: -0.03em;
-    line-height: 1.1;
-}
-.movie-info h3 {
-    font-size: 1.6rem;
-    opacity: 0.6;
-    margin-bottom: 2rem;
-    font-weight: 400;
-}
-.movie-reason-box {
-    background: rgba(255, 255, 255, 0.05);
-    backdrop-filter: blur(40px);
-    -webkit-backdrop-filter: blur(40px);
-    padding: 2.5rem;
-    border-radius: 24px;
-    border: 1px solid rgba(255,255,255,0.1);
-    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-}
-.movie-reason-box h4 {
-    font-size: 1.6rem;
-    margin-bottom: 1rem;
-    color: #f97316;
-}
-.movie-reason-box p {
-    font-size: 1.15rem;
-    line-height: 1.6;
-    opacity: 0.9;
-    min-height: 3rem;
-}
+        .lyric-line {
+            position: absolute;
+            top: 50%;
+            width: 100%;
+            transition: all 0.9s cubic-bezier(0.34, 1.3, 0.64, 1);
+            transform-origin: center center;
+            color: rgba(255, 255, 255, 0.3);
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+            will-change: transform, filter, opacity;
+        }
 
-/* Movie Content Slide */
-.movie-content-slide {
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 3rem 5rem;
-    gap: 2rem;
-}
-.movie-gif-area {
-    width: 100%;
-    max-width: 800px;
-    height: 350px;
-    border-radius: 20px;
-    overflow: hidden;
-    background: rgba(255,255,255,0.03);
-    border: 2px dashed rgba(255,255,255,0.15);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: rgba(255,255,255,0.25);
-    font-size: 1.3rem;
-    flex-shrink: 0;
-}
-.movie-gif-area img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-}
-.movie-explain-area {
-    width: 100%;
-    max-width: 800px;
-    background: rgba(0, 0, 0, 0.5);
-    padding: 2rem 2.5rem;
-    border-radius: 20px;
-    border-left: 6px solid #f97316;
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-}
-.movie-explain-area h4 {
-    font-size: 1.8rem;
-    font-weight: 800;
-    margin-bottom: 1rem;
-    color: #fb923c;
-    min-height: 2rem;
-}
-.movie-explain-area p {
-    font-size: 1.4rem;
-    line-height: 1.7;
-    color: rgba(255,255,255,0.9);
-    min-height: 3rem;
-}
-</style>
-    <link rel="stylesheet" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+        .lyric-text {
+            font-size: 4rem;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            line-height: 1.3;
+            white-space: nowrap;
+        }
+
+        .highlight-grammar {
+            position: relative;
+            display: inline-block;
+            color: #fff;
+        }
+
+        .highlight-grammar::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 8px;
+            background-color: #ffde59;
+            border-radius: 4px;
+            box-shadow: 0 0 15px rgba(255, 222, 89, 0.4);
+        }
+
+        .lyric-note {
+            opacity: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: opacity 0.5s ease, max-height 0.5s ease, margin-top 0.5s ease;
+            transform-origin: top center;
+        }
+
+        .presentation-note {
+            margin-top: 4rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 2rem 2.5rem;
+            border-radius: 20px;
+            border-left: 6px solid #ffde59;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .note-point {
+            display: flex;
+            align-items: center;
+            gap: 1.2rem;
+            font-size: 2.2rem;
+        }
+
+        .note-label {
+            background: #ffde59;
+            color: #000;
+            padding: 0.4rem 1.2rem;
+            border-radius: 12px;
+            font-weight: 800;
+            font-size: 1.6rem;
+            white-space: nowrap;
+        }
+
+        .note-value {
+            color: #fff;
+            font-weight: 600;
+            line-height: 1.3;
+            letter-spacing: -0.02em;
+            font-size: 1.8rem;
+        }
+
+        /* Active lyric state */
+        .lyric-line.active {
+            color: rgba(255, 255, 255, 1);
+            z-index: 10;
+        }
+
+        .lyric-line.active .lyric-note {
+            opacity: 1;
+            max-height: 1000px;
+            margin-top: 1rem;
+        }
+
+        .controls-container {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 1rem;
+            z-index: 100;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .controls-container button {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            width: 60px;
+            height: 60px;
+            border-radius: 30px;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .controls-container button:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: scale(1.1);
+        }
+
+        .controls-container button svg {
+            width: 28px;
+            height: 28px;
+        }
+
+        /* Movie Slides */
+        .movie-intro-slide {
+            flex-direction: row;
+            gap: 5rem;
+            max-width: 1200px;
+            padding: 0 2rem;
+        }
+
+        .movie-poster {
+            width: 380px;
+            height: 540px;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6);
+            flex-shrink: 0;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px dashed rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 1.2rem;
+        }
+
+        .movie-poster img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .movie-info h2 {
+            font-size: 4.5rem;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.03em;
+            line-height: 1.1;
+        }
+
+        .movie-info h3 {
+            font-size: 2.2rem;
+            opacity: 0.6;
+            margin-bottom: 2rem;
+            font-weight: 400;
+        }
+
+        .movie-reason-box {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(40px);
+            -webkit-backdrop-filter: blur(40px);
+            padding: 2.5rem;
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .movie-reason-box h4 {
+            font-size: 2.2rem;
+            margin-bottom: 1rem;
+            color: #f97316;
+        }
+
+        .movie-reason-box p {
+            font-size: 1.8rem;
+            line-height: 1.6;
+            opacity: 0.9;
+            min-height: 3rem;
+        }
+
+        /* Movie Content Slide */
+        .movie-content-slide {
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 3rem 5rem;
+            gap: 2rem;
+        }
+
+        .movie-gif-area {
+            width: 100%;
+            max-width: 800px;
+            height: 350px;
+            border-radius: 20px;
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.03);
+            border: 2px dashed rgba(255, 255, 255, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(255, 255, 255, 0.25);
+            font-size: 1.3rem;
+            flex-shrink: 0;
+        }
+
+        .movie-gif-area img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .movie-explain-area {
+            width: 100%;
+            max-width: 800px;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 2rem 2.5rem;
+            border-radius: 20px;
+            border-left: 6px solid #f97316;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .movie-explain-area h4 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            color: #fb923c;
+            min-height: 2rem;
+        }
+
+        .movie-explain-area p {
+            font-size: 2rem;
+            line-height: 1.7;
+            color: rgba(255, 255, 255, 0.9);
+            min-height: 3rem;
+        }
+    </style>
+    <link rel="stylesheet" crossorigin
+        href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
     <style>
         /* Tooltip Styles for intuitive arrows (Like PPT) */
         .highlight-group {
@@ -423,7 +466,7 @@ body {
             display: inline-block;
             cursor: pointer;
         }
-        
+
         .lyric-highlight {
             position: relative;
             z-index: 1;
@@ -431,10 +474,25 @@ body {
             transition: all 0.3s ease;
         }
 
-        .highlight-purple { border-bottom: 4px solid #a855f7; color: #fff; }
-        .highlight-blue { border-bottom: 4px solid #0ea5e9; color: #fff; }
-        .highlight-success { border-bottom: 4px solid #10b981; color: #fff; }
-        .highlight-warning { border-bottom: 4px solid #f59e0b; color: #fff; }
+        .highlight-purple {
+            border-bottom: 4px solid #a855f7;
+            color: #fff;
+        }
+
+        .highlight-blue {
+            border-bottom: 4px solid #0ea5e9;
+            color: #fff;
+        }
+
+        .highlight-success {
+            border-bottom: 4px solid #10b981;
+            color: #fff;
+        }
+
+        .highlight-warning {
+            border-bottom: 4px solid #f59e0b;
+            color: #fff;
+        }
 
         .lyric-line.active .annotation {
             opacity: 1;
@@ -453,7 +511,7 @@ body {
             opacity: 0;
             visibility: hidden;
             transition: all 0.5s cubic-bezier(0.34, 1.3, 0.64, 1);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.6);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
             z-index: 20;
             letter-spacing: -0.02em;
         }
@@ -464,15 +522,17 @@ body {
             left: 50%;
             transform: translateX(-50%) translateY(10px);
         }
+
         .lyric-line.active .annotation.top {
             transform: translateX(-50%) translateY(0);
         }
-        
+
         .annotation.bottom {
             top: calc(100% + 5px);
             left: 50%;
             transform: translateX(-50%) translateY(-10px);
         }
+
         .lyric-line.active .annotation.bottom {
             transform: translateX(-50%) translateY(0);
         }
@@ -482,6 +542,7 @@ body {
             left: 80%;
             transform: translateX(-50%) translateY(10px);
         }
+
         .lyric-line.active .annotation.right {
             transform: translateX(-50%) translateY(0);
         }
@@ -495,26 +556,116 @@ body {
             transform: translateX(-50%);
         }
 
-        .annotation.top::after, .annotation.right::after {
+        .annotation.top::after,
+        .annotation.right::after {
             top: 100%;
             border-top-color: rgba(15, 15, 35, 0.95);
         }
+
         .annotation.bottom::after {
             bottom: 100%;
             border-bottom-color: rgba(15, 15, 35, 0.95);
         }
 
         /* Colors */
-        .color-purple { color: #d8b4fe; border: 2px solid #a855f7; }
-        .color-blue { color: #bae6fd; border: 2px solid #0ea5e9; }
-        .color-success { color: #a7f3d0; border: 2px solid #10b981; }
-        .color-warning { color: #fde68a; border: 2px solid #f59e0b; }
+        .color-purple {
+            color: #d8b4fe;
+            border: 2px solid #a855f7;
+        }
+
+        .color-blue {
+            color: #bae6fd;
+            border: 2px solid #0ea5e9;
+        }
+
+        .color-success {
+            color: #a7f3d0;
+            border: 2px solid #10b981;
+        }
+
+        .color-warning {
+            color: #fde68a;
+            border: 2px solid #f59e0b;
+        }
+
+        /* Now Playing Header */
+        .now-playing-header {
+            position: fixed;
+            top: 2.5rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(-150%);
+            opacity: 0;
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            padding: 1rem 3rem 1rem 1rem;
+            border-radius: 50px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            z-index: 500;
+            transition: all 0.6s cubic-bezier(0.34, 1.3, 0.64, 1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            pointer-events: none;
+        }
+
+        .now-playing-header.visible {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        .now-playing-header img {
+            width: 54px;
+            height: 54px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid rgba(255, 255, 255, 0.15);
+            transition: border-radius 0.3s ease;
+        }
+
+        .now-playing-header.is-movie img {
+            border-radius: 12px;
+        }
+
+        .np-info {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 0.2rem;
+        }
+
+        .np-title {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: #fff;
+            letter-spacing: -0.02em;
+            line-height: 1.1;
+        }
+
+        .np-artist {
+            font-size: 1.2rem;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.6);
+            line-height: 1.1;
+        }
+
     </style>
 </head>
+
 <body>
     <div class="bg-blur"></div>
-    
+
     <div id="app">
+        <!-- Now Playing Header -->
+        <div id="now-playing-header" class="now-playing-header">
+            <img id="np-image" src="" alt="Cover">
+            <div class="np-info">
+                <div class="np-title" id="np-title">Title</div>
+                <div class="np-artist" id="np-artist">Artist</div>
+            </div>
+        </div>
+
         <!-- Title Slide -->
         <div id="slide-title" class="slide">
             <h1 class="title">영어 수행평가</h1>
@@ -524,15 +675,14 @@ body {
         <!-- Movie Intro Slide -->
         <div id="slide-movie-intro" class="slide movie-intro-slide">
             <div class="movie-poster">
-                <!-- 영화 포스터 이미지를 여기에 넣으세요 -->
-                <span>🎬 포스터</span>
+                <img src="images/cover_avengers.jpg" alt="Avengers Poster">
             </div>
             <div class="movie-info">
-                <h2><!-- 영화 제목 --></h2>
-                <h3><!-- 감독 / 연도 --></h3>
+                <h2>Avengers</h2>
+                <h3>Marvel Studios</h3>
                 <div class="movie-reason-box">
                     <h4>🎯 선정 이유</h4>
-                    <p><!-- 선정 이유를 여기에 작성하세요 --></p>
+                    <p>어벤져스가 11년동안의 어벤져스의 서사가 막을 내렸다는 점과 어벤져스의 최종빌런인 타노스가 “나는 필연적인 존재다”라며 자신의 순리이자정답이라고 여겼지만 자신의 확신이 오히려 파멸을 일으킨 서사적 반어가 작용했다는 점이 인상깊었기 때문에 선정했습니다.</p>
                 </div>
             </div>
         </div>
@@ -540,50 +690,39 @@ body {
         <!-- Movie Content Slide 1 -->
         <div id="slide-movie-1" class="slide movie-content-slide">
             <div class="movie-gif-area">
-                <!-- GIF 이미지를 여기에 넣으세요 -->
-                <span>🎞️ GIF / 장면 이미지</span>
+                <!-- 준비하신 영상(mp4/mov) 파일 적용 -->
+                <video src="images/i’m%20iron%20man.mov" playsinline style="width:100%; height:100%; object-fit:cover;"></video>
             </div>
             <div class="movie-explain-area">
-                <h4><!-- 대사 또는 문법 포인트 --></h4>
-                <p><!-- 설명을 여기에 작성하세요 --></p>
+                <h4>I am Iron Man.</h4>
+                <p>어벤져스를 본 모두가 알 수 있는 대사입니다. 어벤져스의 시작인 MCU의 등장을 알린 대사이며 위의 타노스의 자신은 필연적인 존재(“i am inevitable”)라는 대사와는 완벽한 문학적 대칭이자 대조적인 의미가 담겨 있어 선정했습니다.</p>
             </div>
         </div>
 
         <!-- Movie Content Slide 2 -->
         <div id="slide-movie-2" class="slide movie-content-slide">
             <div class="movie-gif-area">
-                <!-- GIF 이미지를 여기에 넣으세요 -->
-                <span>🎞️ GIF / 장면 이미지</span>
+                <!-- 준비하신 영상(mp4/mov) 파일 적용 -->
+                <video src="images/i%20love%20you%203000.mov" playsinline style="width:100%; height:100%; object-fit:cover;"></video>
             </div>
             <div class="movie-explain-area">
-                <h4><!-- 대사 또는 문법 포인트 --></h4>
-                <p><!-- 설명을 여기에 작성하세요 --></p>
-            </div>
-        </div>
-
-        <!-- Movie Content Slide 3 -->
-        <div id="slide-movie-3" class="slide movie-content-slide">
-            <div class="movie-gif-area">
-                <!-- GIF 이미지를 여기에 넣으세요 -->
-                <span>🎞️ GIF / 장면 이미지</span>
-            </div>
-            <div class="movie-explain-area">
-                <h4><!-- 대사 또는 문법 포인트 --></h4>
-                <p><!-- 설명을 여기에 작성하세요 --></p>
+                <h4>I love you three thousand.</h4>
+                <p>이 대사는 토니 스타크가 어린 딸의 대한 거대한 사랑을 전달하는 대사입니다. 이 문장은 I love you 뒤에는 부사구(very, much)가 와야하지만 3000이라는 숫자를 사용하여 문법적으로는 틀린표현이지만 순수하고 거대한 사랑이 측정할 수 없을 만큼 그대로 전달되는 효과를 가지고 있다는 특징이 있습니다.</p>
             </div>
         </div>
 
         <!-- Song 1 Intro -->
         <div id="slide-intro-0" class="slide intro-slide">
             <div class="album-cover">
-                <img src="images/cover_gangstas_paradise.jpg" alt="Gangsta's Paradise" onerror="this.style.display='none'">
+                <img src="images/cover_gangstas_paradise.jpg" alt="Gangsta's Paradise"
+                    onerror="this.style.display='none'">
             </div>
             <div class="intro-info">
                 <h2>Gangsta's Paradise</h2>
                 <h3>Coolio</h3>
                 <div class="grammar-box">
                     <h4>✨ 곡 선정 이유</h4>
-                    <p>위 노래 제목이 멋진 갱스터들의 이야기를 보여주는 게 아닌 폭력과 빈곤 속에서 살아가는 사람들의 현실과 악순환을 보여준다는 반어법으로 사용된다는 것을 이유로 선정하였습니다.</p>
+                    <p>위 노래는 제목처럼 멋진 갱스터들의 이야기를 보여주는 것이 아닌 폭력과 빈곤속에서 살아가는 사람들의 현실과 악순환을 보여준다는 반어법을 표현하고 말해주려는 노래이고 또한 갱스터들을 주 소재로 삼았지만 욕설이 거의 들어가지 않았다는 점이 큰 특징으로 알려져있습니다.</p>
                 </div>
             </div>
         </div>
@@ -596,14 +735,14 @@ body {
         <!-- Song 2 Intro -->
         <div id="slide-intro-1" class="slide intro-slide">
             <div class="album-cover">
-                <img src="images/cover_thousand_years.jpg" alt="A Thousand Years" onerror="this.style.display='none'">
+                <img src="images/cover_shape_of_you.jpg" alt="Shape of You" onerror="this.style.display='none'">
             </div>
             <div class="intro-info">
-                <h2>A Thousand Years</h2>
-                <h3>Christina Perri</h3>
+                <h2>Shape of You</h2>
+                <h3>Ed Sheeran</h3>
                 <div class="grammar-box">
-                    <h4>✨ 이 노래의 핵심 문법</h4>
-                    <p>주어와 동사의 수일치, to부정사, 지각동사 등 문장을 길게 이어주는 필수적인 영어 구조가 아름다운 가사에 담겨 있습니다.</p>
+                    <h4>✨ 곡 선정 이유</h4>
+                    <p>전 세계가 당연하단 듯이 shape of you라고만 말하면 전 세계가 알 수 있는 메가 히트곡입니다. 그러나 제목 너의 외형이라는 외적인 내용이 아닌 실제로는 상대의 존재 자체를 사랑한다는 내적으로 포괄적으로 사랑한다는 반전에 호기심이 생겨서 선정했습니다.</p>
                 </div>
             </div>
         </div>
@@ -613,298 +752,359 @@ body {
             <div class="lyrics-wrapper" id="lyrics-wrapper-1"></div>
         </div>
 
-        <!-- Song 3 Intro (New) -->
-        <div id="slide-intro-2" class="slide intro-slide">
-            <div class="album-cover">
-                <div style="width:100%; height:100%; background: linear-gradient(135deg, #a855f7, #0ea5e9); display: flex; align-items: center; justify-content: center; color: white; font-size: 5rem; font-weight: bold;">AJ</div>
-            </div>
-            <div class="intro-info">
-                <h2>Like Strangers Do & We Are</h2>
-                <h3>AJ Mitchell</h3>
-                <div class="grammar-box">
-                    <h4>✨ 이유</h4>
-                    <p>이 가사는 노래의 핵심적인 감정을 담고 있다고 느꼈습니다. "우리가 함께가 아니라면 우린 뭐가 될까?"라는 문장에서 불안과 걱정이 담겼다고 생각하고 동시에 "영원한 것은 없다"는 것에서 차가운 현실을 표현했다고 생각하여 이 문장을 선정하였습니다.</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Song 3 Lyrics -->
-        <div id="slide-lyrics-2" class="slide lyrics-slide">
-            <div class="lyrics-wrapper" id="lyrics-wrapper-2"></div>
-        </div>
+        <!-- Song 3 Removed -->
     </div>
 
+    <!-- Global Audio -->
+    <audio id="global-audio-player"></audio>
+
     <!-- Controls -->
-    <div class="controls">
-        <button id="prev-btn" title="Previous (Left Arrow)">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+    <div class="controls-container">
+        <button id="replay-btn" title="Replay Video" style="display: none;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 2v6h-6"></path>
+                <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+            </svg>
         </button>
-        <button id="next-btn" title="Next (Right Arrow / Space)">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+        <button id="global-audio-btn" title="Play Audio" style="display: none;" onclick="playGlobalAudio()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left:3px;">
+                <polygon points="5 3 19 12 5 21 5 3"></polygon>
+            </svg>
         </button>
+        <div class="nav-buttons">
+            <button id="prev-btn" title="Previous (Left Arrow)">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M15 18l-6-6 6-6" />
+                </svg>
+            </button>
+            <button id="next-btn" title="Next (Right Arrow / Space)">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M9 18l6-6-6-6" />
+                </svg>
+            </button>
+        </div>
     </div>
 
     <script>
-// Presentation Data with Lyrics and Grammar Points
-const songsData = [
-    {
-        lyrics: [
-            { 
-                textHtml: "<span class='highlight-group'><span class='lyric-highlight highlight-purple'>It's been a long day</span><div class='annotation bottom color-purple'>It(S) + 's been(V) + a long day(C)</div></span> without you, my friend", 
-                points: [
-                    { label: "문법", value: "2형식 문장의 현재완료: 주어(It)와 보어(day)가 현재완료 동사(has been)로 연결되었습니다." }
+        // Presentation Data with Lyrics and Grammar Points
+        const songsData = [
+            {
+                lyrics: [
+                    {
+                        textHtml: "Tell me why are we so blind to see,<br>that the ones we hurt are you and me?",
+                        audioSrc: "images/tell%20me%20why.mp3",
+                        points: [
+                            { label: "해석", value: "우리가 상처 주는 사람들이 너와 나라는 것을 왜 우리는 보지 못할 정도로 눈이 먼 것인지 말해줘" },
+                            { label: "의미", value: "이 가사는 폭력과 범죄가 결국 다른 사람들뿐만 아니라 사회 전체 나아가 자신에게 까지도 피해를 준다는 메시지를 담고 있다." },
+                            { label: "선정 이유", value: "이 구절은 노래의 주제를 잘 보여주는 대표적인 구절이기에 노래 설명을 위해 포함해야할 필수 문장이라 생각했습니다." }
+                        ]
+                    },
+                    {
+                        textHtml: "<span class='highlight-group'><span class='lyric-highlight highlight-success'>Power and the money,<br>money and the power</span><div class='annotation bottom color-success'>명사구의 반복적 나열</div></span>",
+                        audioSrc: "images/power%20and%20the%20noney.mp3",
+                        points: [
+                            { label: "해석", value: "직역하면 권력은 돈, 돈은 권력이다." },
+                            { label: "의미", value: "이 가사는 반복법을 통해 돈을 얻으려면 권력이 필요하고 권력을 얻으려면 돈이 필요하다는 상호연관성 내용을 강조합니다. 이는 곧 갱스터들의 사회를 잘 나타내는 인식이고 이 목표를 이루는 과정속에는 타인을 상처입히게 되어있고 자신 또한 다르지 않다는 것을 한번더 상기시켜주는 문장입니다." },
+                            { label: "특징", value: "이 문장은 또한 주어와 동사가 있는 완전한 문장이 아닌 명사만 나열되어 있는 명사구를 통해 리듬과 주제를 형성한다는 특징이 있습니다." }
+                        ]
+                    }
                 ]
             },
-            { 
-                textHtml: "And <span class='highlight-group'><span class='lyric-highlight highlight-blue'>I'll tell you all</span><div class='annotation bottom color-blue'>I(S) + 'll tell(V) + you(IO) + all(DO)</div></span> about it <span class='highlight-group'><span class='lyric-highlight highlight-success'>when I see you</span><div class='annotation bottom color-success'>when(접속사) + I(S) + see(V) + you(O)</div></span> again", 
-                points: [
-                    { label: "주절", value: "4형식 문장: 주어(I)가 간접목적어(you)에게 직접목적어(all)를 말해줍니다." },
-                    { label: "종속절", value: "시간의 부사절: when 절 안에서는 미래의 일도 현재 시제(see)로 씁니다." }
-                ]
-            },
-            { 
-                textHtml: "<span class='highlight-group'><span class='lyric-highlight highlight-purple'>We've come</span><div class='annotation bottom color-purple'>We(S) + 've come(V)</div></span> a long way from <span class='highlight-group'><span class='lyric-highlight highlight-warning'>where we began</span><div class='annotation bottom color-warning'>where(관계부사) + we(S) + began(V)</div></span>", 
-                points: [
-                    { label: "문법", value: "1형식 문장(S+V)과 전치사 from의 목적어로 쓰인 관계부사(where)절입니다." }
-                ]
-            },
-            { 
-                textHtml: "Oh, <span class='highlight-group'><span class='lyric-highlight highlight-blue'>I'll tell you</span><div class='annotation bottom color-blue'>I(S) + 'll tell(V) + you(IO)</div></span> all about it when I see you again", 
-                points: [
-                    { label: "표현", value: "조동사 will: 내가 모든 걸 다 말해 '줄게'라는 화자의 강한 의지를 나타냅니다." }
-                ]
-            },
-            { 
-                textHtml: "<span class='highlight-group'><span class='lyric-highlight highlight-success'>When I see you</span><div class='annotation bottom color-success'>When(접속사) + I(S) + see(V) + you(O)</div></span> again", 
-                points: [
-                    { label: "구문", value: "부사절의 단독 사용: 다시 만나게 될 '그때'를 짙은 그리움과 함께 강조합니다." }
+            {
+                lyrics: [
+                    {
+                        textHtml: "We <span class='highlight-group'><span class='lyric-highlight highlight-warning'>push and pull</span><div class='annotation bottom color-warning'>push(V) + and(등위접속사) + pull(V)</div></span> like a magnet <span class='highlight-group'><span class='lyric-highlight highlight-purple'>do</span><div class='annotation bottom color-purple'>a magnet(단수) + do(복수동사)</div></span>",
+                        audioSrc: "images/we%20push%20and%20pull.mp3",
+                        points: [
+                            { label: "해석", value: "사랑할 땐 서로 당기고 사랑하는 pull의 의미를 강하게 드러내지만 갈등이 발생할 땐 서로 밀어내고 배척하는 push의 의미를 강하게 드러내어 현실의 연애 상태를 잘 표현한 문장입니다." },
+                            { label: "문법", value: "가사 속 a magnet는 단수이므로 동사는 does 사용이 적절하나 애드 시런은 의도적으로 앞 구절의 라임과 리듬감을 살리기 위해 복수형 동사를 사용했고 등위 접속사 and를 사용하여 pull, push의 병렬구조를 이루게 하였습니다." }
+                        ]
+                    },
+                    {
+                        textHtml: "And now my bedsheets <span class='highlight-group'><span class='lyric-highlight highlight-success'>smell like you</span><div class='annotation bottom color-success'>smell(감각동사) + like(전치사) + you(명사)</div></span>",
+                        audioSrc: "images/and%20now%20my%20bedsheets.mp3",
+                        points: [
+                            { label: "해석", value: "침대 시트에 너의 향이 남아있다로 연인과 헤어져 눈 앞이보이지 않아도 그 사람을 기억하게 만든 감각이 기억하는 연애의 흔적이라는 현실의 연애의 잔상을 완벽하게 표현한 과거 연인의 대한 그리움을 표현한 가사로 결국 헤어지더라도 나는 여전히 너를 사랑하고 그리워하고 있다는 것을 말해주고자 하는 주요 내용이라 선정했습니다." },
+                            { label: "문법", value: "smell like 명사 문법구조를 가졌고 like를 좋아하다라고 해석하는 것이 아닌 ~와 같이라고 해석해야합니다." }
+                        ]
+                    }
                 ]
             }
-        ]
-    },
-    {
-        lyrics: [
-            { 
-                textHtml: "<span class='highlight-group'><span class='lyric-highlight highlight-purple'>Heart beats</span><div class='annotation bottom color-purple'>Heart(S) + beats(V)</div></span> fast", 
-                points: [
-                    { label: "문법", value: "1형식 문장: Heart(심장)가 3인칭 단수이므로 동사 beat에 s가 붙습니다." }
-                ]
-            },
-            { 
-                textHtml: "<span class='highlight-group'><span class='lyric-highlight highlight-blue'>How to be brave</span><div class='annotation bottom color-blue'>의문사 + to be(V) + brave(C)</div></span>?", 
-                points: [
-                    { label: "구문", value: "의문사 + to부정사 명사구: '어떻게 용감해져야 할지'로 해석됩니다." }
-                ]
-            },
-            { 
-                textHtml: "How <span class='highlight-group'><span class='lyric-highlight highlight-purple'>can I love</span><div class='annotation bottom color-purple'>can(조동사) + I(S) + love(V)</div></span> <span class='highlight-group'><span class='lyric-highlight highlight-success'>when I'm afraid</span><div class='annotation bottom color-success'>when(접속사) + I(S) + 'm(V) + afraid(C)</div></span> to fall?", 
-                points: [
-                    { label: "문법", value: "의문문(조동사+S+V)과 시간의 부사절(추락하는 것을 두려워'할 때')이 결합되었습니다." }
-                ]
-            },
-            { 
-                textHtml: "But <span class='highlight-group'><span class='lyric-highlight highlight-warning'>watching you stand</span><div class='annotation bottom color-warning'>watching(지각동사) + you(O) + stand(OC)</div></span> alone", 
-                points: [
-                    { label: "문법", value: "지각동사의 5형식 구조: watch(지각동사) + you(목적어) + stand(목적격 보어로 쓰인 동사원형)." }
-                ]
-            },
-            { 
-                textHtml: "<span class='highlight-group'><span class='lyric-highlight highlight-purple'>All of my doubt suddenly goes</span><div class='annotation bottom color-purple'>All of my doubt(S) + goes(V)</div></span> away", 
-                points: [
-                    { label: "수일치", value: "1형식 문장: doubt(의심)가 셀 수 없는 명사이므로, 전체(All)라도 단수 동사 goes를 씁니다." }
-                ]
-            }
-        ]
-    },
-    {
-        // 3rd Song (New)
-        lyrics: [
-            { 
-                textHtml: "You and me, <span class='highlight-group'><span class='lyric-highlight highlight-purple'>what we are</span><div class='annotation bottom color-purple'>what(C) + we(S) + are(V)</div></span>",
-                points: [
-                    { label: "문법", value: "간접의문문 명사절: 의문사가 보어 역할을 하며 주어+동사 어순입니다." }
-                ]
-            },
-            { 
-                textHtml: "<span class='highlight-group'><span class='lyric-highlight highlight-blue'>if</span><div class='annotation bottom color-blue'>if(접속사) + we(S) + 're(V) + together(C)</div></span> we're not together?",
-                points: [
-                    { label: "문법", value: "조건 부사절: if가 이끄는 절 안에서 we가 주어, 're가 동사입니다." }
-                ]
-            },
-            { 
-                textHtml: "It <span class='highlight-group'><span class='lyric-highlight highlight-success'>could be</span><div class='annotation bottom color-success'>It(S) + could be(V) + nothing(C)</div></span> nothing <span class='highlight-group'><span class='lyric-highlight highlight-warning'>'cause nothing lasts forever'</span><div class='annotation bottom color-warning'>'cause(접속사) + nothing(S) + lasts(V)</div></span>.",
-                points: [
-                    { label: "주절", value: "2형식 문장: 주어(It)와 보어(nothing)가 동사(could be)로 연결됩니다." },
-                    { label: "종속절", value: "이유 부사절: 'cause 절 안에서 nothing이 주어, lasts가 1형식 동사입니다." }
-                ]
-            }
-        ]
-    }
-];
+        ];
 
-// 1. Initialize DOM for Lyrics
-songsData.forEach((song, songIdx) => {
-    const wrapper = document.getElementById(`lyrics-wrapper-${songIdx}`);
-    if(!wrapper) return;
+        // 1. Initialize DOM for Lyrics
+        songsData.forEach((song, songIdx) => {
+            const wrapper = document.getElementById(`lyrics-wrapper-${songIdx}`);
+            if (!wrapper) return;
 
-    song.lyrics.forEach((lyric, lyricIdx) => {
-        const line = document.createElement('div');
-        line.className = 'lyric-line';
-        line.id = `lyric-${songIdx}-${lyricIdx}`;
-        
-        const text = document.createElement('div');
-        text.className = 'lyric-text';
-        text.innerHTML = lyric.textHtml;
-        line.appendChild(text);
+            song.lyrics.forEach((lyric, lyricIdx) => {
+                const line = document.createElement('div');
+                line.className = 'lyric-line';
+                line.id = `lyric-${songIdx}-${lyricIdx}`;
 
-        if (lyric.points && lyric.points.length > 0) {
-            const note = document.createElement('div');
-            note.className = 'lyric-note';
-            
-            let pointsHtml = '<div class="presentation-note">';
-            lyric.points.forEach(pt => {
-                pointsHtml += `
+                const text = document.createElement('div');
+                text.className = 'lyric-text';
+                text.innerHTML = lyric.textHtml;
+                line.appendChild(text);
+
+                if (lyric.points && lyric.points.length > 0) {
+                    const note = document.createElement('div');
+                    note.className = 'lyric-note';
+
+                    let pointsHtml = '<div class="presentation-note">';
+
+                    lyric.points.forEach(pt => {
+                        pointsHtml += `
                     <div class="note-point">
                         <span class="note-label">${pt.label}</span>
                         <span class="note-value">${pt.value}</span>
                     </div>
                 `;
+                    });
+                    pointsHtml += '</div>';
+
+                    note.innerHTML = pointsHtml;
+                    line.appendChild(note);
+                }
+
+                wrapper.appendChild(line);
             });
-            pointsHtml += '</div>';
+        });
+
+        // 2. Define the exact sequence of steps for the presentation
+        const steps = [
+            { type: 'slide', id: 'slide-title' },
+            { type: 'slide', id: 'slide-movie-intro' },
+            { type: 'slide', id: 'slide-movie-1' },
+            { type: 'slide', id: 'slide-movie-2' },
+            { type: 'slide', id: 'slide-intro-0' }
+        ];
+
+        // Add lyrics lines as individual steps for Song 1
+        songsData[0].lyrics.forEach((_, i) => {
+            steps.push({ type: 'lyric', songIdx: 0, lyricIdx: i });
+        });
+
+        steps.push({ type: 'slide', id: 'slide-intro-1' });
+
+        // Add lyrics lines as individual steps for Song 2
+        songsData[1].lyrics.forEach((_, i) => {
+            steps.push({ type: 'lyric', songIdx: 1, lyricIdx: i });
+        });
+
+        let currentStep = 0;
+
+        let activeVideoTimer = null;
+
+        function playGlobalAudio() {
+            const player = document.getElementById('global-audio-player');
+            if(player && player.src) {
+                player.currentTime = 0;
+                player.play().catch(e => console.error("Audio play failed:", e));
+            }
+        }
+
+        // 3. Update Function
+        function updatePresentation() {
+            const step = steps[currentStep];
+            let hasActiveVideo = false;
+
+            // Handle Global Audio Player
+            const globalAudioPlayer = document.getElementById('global-audio-player');
+            const globalAudioBtn = document.getElementById('global-audio-btn');
             
-            note.innerHTML = pointsHtml;
-            line.appendChild(note);
-        }
+            if (globalAudioPlayer) {
+                globalAudioPlayer.pause();
+                globalAudioPlayer.currentTime = 0;
+            }
 
-        wrapper.appendChild(line);
-    });
-});
-
-// 2. Define the exact sequence of steps for the presentation
-const steps = [
-    { type: 'slide', id: 'slide-title' },
-    { type: 'slide', id: 'slide-movie-intro' },
-    { type: 'slide', id: 'slide-movie-1' },
-    { type: 'slide', id: 'slide-movie-2' },
-    { type: 'slide', id: 'slide-movie-3' },
-    { type: 'slide', id: 'slide-intro-0' }
-];
-
-// Add lyrics lines as individual steps for Song 1
-songsData[0].lyrics.forEach((_, i) => {
-    steps.push({ type: 'lyric', songIdx: 0, lyricIdx: i });
-});
-
-steps.push({ type: 'slide', id: 'slide-intro-1' });
-
-// Add lyrics lines as individual steps for Song 2
-songsData[1].lyrics.forEach((_, i) => {
-    steps.push({ type: 'lyric', songIdx: 1, lyricIdx: i });
-});
-
-steps.push({ type: 'slide', id: 'slide-intro-2' });
-
-// Add lyrics lines as individual steps for Song 3
-if(songsData[2]) {
-    songsData[2].lyrics.forEach((_, i) => {
-        steps.push({ type: 'lyric', songIdx: 2, lyricIdx: i });
-    });
-}
-
-let currentStep = 0;
-
-// 3. Update Function
-function updatePresentation() {
-    const step = steps[currentStep];
-
-    // Handle overall slide visibility
-    document.querySelectorAll('.slide').forEach((el) => {
-        // Determine the logical index of this slide block in the steps array
-        let stepIndexForSlide = steps.findIndex(s => s.id === el.id);
-        if (stepIndexForSlide === -1) {
-            if (el.id === 'slide-lyrics-0') stepIndexForSlide = steps.findIndex(s => s.type === 'lyric' && s.songIdx === 0);
-            if (el.id === 'slide-lyrics-1') stepIndexForSlide = steps.findIndex(s => s.type === 'lyric' && s.songIdx === 1);
-            if (el.id === 'slide-lyrics-2') stepIndexForSlide = steps.findIndex(s => s.type === 'lyric' && s.songIdx === 2);
-        }
-        
-        el.classList.remove('active', 'past');
-        
-        if (step.type === 'slide' && step.id === el.id) {
-            el.classList.add('active');
-        } else if (step.type === 'lyric' && el.id === `slide-lyrics-${step.songIdx}`) {
-            el.classList.add('active');
-        } else if (stepIndexForSlide !== -1 && stepIndexForSlide < currentStep) {
-            el.classList.add('past');
-        }
-    });
-
-    // Handle internal lyric positioning (Apple Music Style)
-    songsData.forEach((song, sIdx) => {
-        song.lyrics.forEach((_, lIdx) => {
-            const lineEl = document.getElementById(`lyric-${sIdx}-${lIdx}`);
-            if(!lineEl) return;
-            let isActiveSlide = step.type === 'lyric' && step.songIdx === sIdx;
-            
-            if (isActiveSlide) {
-                const diff = lIdx - step.lyricIdx;
-                lineEl.className = 'lyric-line'; // Reset classes
-                
-                if (diff === 0) {
-                    // Active line: centered
-                    lineEl.classList.add('active');
-                    lineEl.style.transform = `translateY(-120px) scale(1.05)`;
-                    lineEl.style.filter = `blur(0px)`;
-                    lineEl.style.opacity = `1`;
-                } else if (diff < 0) {
-                    // Past lines: far above
-                    lineEl.style.transform = `translateY(${diff * 150 - 350}px) scale(${1 + diff * 0.03})`;
-                    lineEl.style.filter = `blur(${Math.min(10, Math.abs(diff) * 2)}px)`;
-                    lineEl.style.opacity = `${Math.max(0, 0.6 - Math.abs(diff) * 0.3)}`;
+            if (step.type === 'lyric') {
+                const lyricData = songsData[step.songIdx].lyrics[step.lyricIdx];
+                if (lyricData && lyricData.audioSrc) {
+                    globalAudioPlayer.src = lyricData.audioSrc;
+                    globalAudioBtn.style.display = 'flex';
                 } else {
-                    // Future lines: far below, no overlap with annotation/note
-                    lineEl.style.transform = `translateY(${diff * 150 + 350}px) scale(${1 - diff * 0.03})`;
-                    lineEl.style.filter = `blur(${Math.min(5, Math.abs(diff) * 1)}px)`;
-                    lineEl.style.opacity = `${Math.max(0, 0.5 - diff * 0.25)}`;
+                    globalAudioPlayer.removeAttribute('src');
+                    globalAudioBtn.style.display = 'none';
                 }
             } else {
-                // Reset styling
-                lineEl.style.transform = `translateY(${lIdx * 100}px) scale(0.9)`;
-                lineEl.style.filter = `blur(4px)`;
-                lineEl.style.opacity = `0`;
-                lineEl.classList.remove('active');
+                if (globalAudioPlayer) globalAudioPlayer.removeAttribute('src');
+                if (globalAudioBtn) globalAudioBtn.style.display = 'none';
+            }
+
+            // Handle overall slide visibility
+            document.querySelectorAll('.slide').forEach((el) => {
+                // Determine the logical index of this slide block in the steps array
+                let stepIndexForSlide = steps.findIndex(s => s.id === el.id);
+                if (stepIndexForSlide === -1) {
+                    if (el.id === 'slide-lyrics-0') stepIndexForSlide = steps.findIndex(s => s.type === 'lyric' && s.songIdx === 0);
+                    if (el.id === 'slide-lyrics-1') stepIndexForSlide = steps.findIndex(s => s.type === 'lyric' && s.songIdx === 1);
+                }
+
+                const wasActive = el.classList.contains('active');
+                el.classList.remove('active', 'past');
+                let isActive = false;
+
+                if (step.type === 'slide' && step.id === el.id) {
+                    el.classList.add('active');
+                    isActive = true;
+                } else if (step.type === 'lyric' && el.id === `slide-lyrics-${step.songIdx}`) {
+                    el.classList.add('active');
+                    isActive = true;
+                } else if (stepIndexForSlide !== -1 && stepIndexForSlide < currentStep) {
+                    el.classList.add('past');
+                }
+
+                const vid = el.querySelector('video');
+                if (vid) {
+                    if (isActive && !wasActive) {
+                        hasActiveVideo = true;
+                        vid.currentTime = 0;
+                        if (activeVideoTimer) clearTimeout(activeVideoTimer);
+                        activeVideoTimer = setTimeout(() => {
+                            if (el.classList.contains('active')) vid.play().catch(e => console.log('Autoplay prevented:', e));
+                        }, 500);
+                    } else if (isActive && wasActive) {
+                        hasActiveVideo = true;
+                    } else if (!isActive && wasActive) {
+                        vid.pause();
+                        vid.currentTime = 0;
+                    }
+                }
+            });
+
+            const replayBtn = document.getElementById('replay-btn');
+            if (replayBtn) {
+                replayBtn.style.display = hasActiveVideo ? 'flex' : 'none';
+            }
+
+            // Handle Now Playing Header
+            const npHeader = document.getElementById('now-playing-header');
+            if (npHeader) {
+                const npImage = document.getElementById('np-image');
+                const npTitle = document.getElementById('np-title');
+                const npArtist = document.getElementById('np-artist');
+                let showHeader = false;
+
+                if (step.type === 'slide' && (step.id === 'slide-movie-1' || step.id === 'slide-movie-2')) {
+                    showHeader = true;
+                    npHeader.classList.add('is-movie');
+                    npImage.src = "images/cover_avengers.jpg";
+                    npTitle.innerText = "Avengers";
+                    npArtist.innerText = "Marvel Studios";
+                } else if (step.type === 'lyric') {
+                    showHeader = true;
+                    npHeader.classList.remove('is-movie');
+                    if (step.songIdx === 0) {
+                        npImage.src = "images/cover_gangstas_paradise.jpg";
+                        npTitle.innerText = "Gangsta's Paradise";
+                        npArtist.innerText = "Coolio";
+                    } else if (step.songIdx === 1) {
+                        npImage.src = "images/cover_shape_of_you.jpg";
+                        npTitle.innerText = "Shape of You";
+                        npArtist.innerText = "Ed Sheeran";
+                    }
+                }
+
+                if (showHeader) {
+                    npHeader.classList.add('visible');
+                } else {
+                    npHeader.classList.remove('visible');
+                }
+            }
+
+            // Handle internal lyric positioning (Apple Music Style)
+            songsData.forEach((song, sIdx) => {
+                song.lyrics.forEach((_, lIdx) => {
+                    const lineEl = document.getElementById(`lyric-${sIdx}-${lIdx}`);
+                    if (!lineEl) return;
+                    let isActiveSlide = step.type === 'lyric' && step.songIdx === sIdx;
+
+                    if (isActiveSlide) {
+                        const diff = lIdx - step.lyricIdx;
+                        lineEl.className = 'lyric-line'; // Reset classes
+
+                        if (diff === 0) {
+                            // Active line: centered
+                            lineEl.classList.add('active');
+                            lineEl.style.transform = `translateY(-220px) scale(1.05)`;
+                            lineEl.style.filter = `blur(0px)`;
+                            lineEl.style.opacity = `1`;
+                        } else if (diff < 0) {
+                            // Past lines: far above
+                            lineEl.style.transform = `translateY(${diff * 150 - 450}px) scale(${1 + diff * 0.03})`;
+                            lineEl.style.filter = `blur(${Math.min(10, Math.abs(diff) * 2)}px)`;
+                            lineEl.style.opacity = `${Math.max(0, 0.6 - Math.abs(diff) * 0.3)}`;
+                        } else {
+                            // Future lines: far below, no overlap with annotation/note
+                            lineEl.style.transform = `translateY(${diff * 150 + 450}px) scale(${1 - diff * 0.03})`;
+                            lineEl.style.filter = `blur(${Math.min(5, Math.abs(diff) * 1)}px)`;
+                            lineEl.style.opacity = `${Math.max(0, 0.5 - diff * 0.25)}`;
+                        }
+                    } else {
+                        // Reset styling
+                        lineEl.style.transform = `translateY(${lIdx * 100}px) scale(0.9)`;
+                        lineEl.style.filter = `blur(4px)`;
+                        lineEl.style.opacity = `0`;
+                        lineEl.classList.remove('active');
+                    }
+                });
+            });
+        }
+
+        // 4. Event Listeners
+        function goNext() {
+            if (currentStep < steps.length - 1) {
+                currentStep++;
+                updatePresentation();
+            }
+        }
+
+        function goPrev() {
+            if (currentStep > 0) {
+                currentStep--;
+                updatePresentation();
+            }
+        }
+
+        document.getElementById('next-btn').addEventListener('click', goNext);
+        document.getElementById('prev-btn').addEventListener('click', goPrev);
+
+        const replayBtn = document.getElementById('replay-btn');
+        if (replayBtn) {
+            replayBtn.addEventListener('click', () => {
+                const activeSlide = document.querySelector('.slide.active');
+                if (activeSlide) {
+                    const vid = activeSlide.querySelector('video');
+                    if (vid) {
+                        vid.pause();
+                        vid.currentTime = 0;
+                        vid.play();
+                    }
+                }
+            });
+            // Add hover effect via JS to keep it simple without adding css class block
+            replayBtn.addEventListener('mouseenter', () => {
+                replayBtn.style.background = 'rgba(255, 255, 255, 0.25)';
+                replayBtn.style.transform = 'scale(1.1)';
+            });
+            replayBtn.addEventListener('mouseleave', () => {
+                replayBtn.style.background = 'rgba(255, 255, 255, 0.1)';
+                replayBtn.style.transform = 'scale(1)';
+            });
+        }
+
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === 'Space' || e.key === 'ArrowDown') {
+                goNext();
+            } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+                goPrev();
             }
         });
-    });
-}
 
-// 4. Event Listeners
-function goNext() {
-    if (currentStep < steps.length - 1) {
-        currentStep++;
+        // Start the presentation
         updatePresentation();
-    }
-}
-
-function goPrev() {
-    if (currentStep > 0) {
-        currentStep--;
-        updatePresentation();
-    }
-}
-
-document.getElementById('next-btn').addEventListener('click', goNext);
-document.getElementById('prev-btn').addEventListener('click', goPrev);
-
-window.addEventListener('keydown', (e) => {
-    if (e.key === 'ArrowRight' || e.key === 'Space' || e.key === 'ArrowDown') {
-        goNext();
-    } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
-        goPrev();
-    }
-});
-
-// Start the presentation
-updatePresentation();
     </script>
 </body>
+
 </html>
