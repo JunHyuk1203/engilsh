@@ -754,6 +754,13 @@
         </div>
 
         <!-- Song 3 Removed -->
+        <!-- Ending Slide -->
+        <div id="slide-ending" class="slide">
+            <h1 style="font-size: 8rem; font-weight: 800; margin-bottom: 4rem; letter-spacing: -0.02em; text-shadow: 0 10px 30px rgba(0,0,0,0.5);"> - 끝 - </h1>
+            <div style="width: 800px; height: 500px; border: 4px dashed rgba(255,255,255,0.4); border-radius: 24px; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.05); box-shadow: 0 20px 50px rgba(0,0,0,0.3);">
+                <p style="font-size: 2.5rem; color: rgba(255,255,255,0.5); font-weight: 600;">[ 모둠 활동 사진 공간 ]</p>
+            </div>
+        </div>
     </div>
 
     <!-- Global Audio -->
@@ -892,6 +899,9 @@
         songsData[1].lyrics.forEach((_, i) => {
             steps.push({ type: 'lyric', songIdx: 1, lyricIdx: i });
         });
+
+        // Add Ending slide
+        steps.push({ type: 'slide', id: 'slide-ending' });
 
         let currentStep = 0;
 
