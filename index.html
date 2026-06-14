@@ -13,7 +13,7 @@
         }
 
         html {
-            font-size: clamp(5px, min(1.2vw, 1.8vh), 16px);
+            font-size: 62.5%; /* 1rem = 10px at base */
         }
 
         body {
@@ -24,8 +24,8 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            height: 100vh;
             width: 100vw;
+            height: 100dvh;
             margin: 0;
             padding: 0;
         }
@@ -62,12 +62,13 @@
 
         #app {
             position: relative;
-            width: 100%;
-            height: 100%;
+            width: 1920px;
+            height: 1080px;
             display: flex;
             align-items: center;
             justify-content: center;
-            overflow: hidden;
+            transform-origin: center center;
+            flex-shrink: 0;
         }
 
         /* Slide Base Setup */
@@ -126,9 +127,9 @@
         }
 
         .album-cover {
-            width: 30rem;
-            height: 30rem;
-            border-radius: 1.5rem;
+            width: 480px;
+            height: 480px;
+            border-radius: 24px;
             overflow: hidden;
             box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6);
             flex-shrink: 0;
@@ -352,9 +353,9 @@
         }
 
         .movie-poster {
-            width: 23.75rem;
-            height: 33.75rem;
-            border-radius: 1.25rem;
+            width: 380px;
+            height: 540px;
+            border-radius: 20px;
             overflow: hidden;
             box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6);
             flex-shrink: 0;
@@ -415,15 +416,15 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 8.5rem 5rem 2rem 5rem;
+            padding: 3rem 5rem;
             gap: 2rem;
         }
 
         .movie-gif-area {
             width: 100%;
-            max-width: 50rem;
-            height: 18rem;
-            border-radius: 1.25rem;
+            max-width: 800px;
+            height: 350px;
+            border-radius: 20px;
             overflow: hidden;
             background: rgba(255, 255, 255, 0.03);
             border: 2px dashed rgba(255, 255, 255, 0.15);
@@ -443,7 +444,7 @@
 
         .movie-explain-area {
             width: 100%;
-            max-width: 50rem;
+            max-width: 800px;
             background: rgba(0, 0, 0, 0.5);
             padding: 2rem 2.5rem;
             border-radius: 20px;
@@ -602,17 +603,17 @@
         /* Now Playing Header */
         .now-playing-header {
             position: absolute;
-            top: max(1rem, 1.5vh);
+            top: 2.5rem;
             left: 50%;
             transform: translateX(-50%) translateY(-150%);
             opacity: 0;
             display: flex;
             align-items: center;
-            gap: 1rem;
+            gap: 1.5rem;
             background: rgba(0, 0, 0, 0.4);
             backdrop-filter: blur(24px);
             -webkit-backdrop-filter: blur(24px);
-            padding: 0.6rem 2rem 0.6rem 0.6rem;
+            padding: 1rem 3rem 1rem 1rem;
             border-radius: 50px;
             border: 1px solid rgba(255, 255, 255, 0.1);
             z-index: 500;
@@ -628,8 +629,8 @@
         }
 
         .now-playing-header img {
-            width: 4rem;
-            height: 4rem;
+            width: 54px;
+            height: 54px;
             border-radius: 50%;
             object-fit: cover;
             border: 2px solid rgba(255, 255, 255, 0.15);
@@ -1119,6 +1120,21 @@
                 goPrev();
             }
         });
+
+        // Responsive scale: fit 1920x1080 canvas into any screen size
+        function resizeApp() {
+            const app = document.getElementById('app');
+            const scaleX = window.innerWidth / 1920;
+            const scaleY = window.innerHeight / 1080;
+            const scale = Math.min(scaleX, scaleY);
+            app.style.transform = `scale(${scale})`;
+        }
+        window.addEventListener('resize', resizeApp);
+        // Use visualViewport for mobile accuracy
+        if (window.visualViewport) {
+            window.visualViewport.addEventListener('resize', resizeApp);
+        }
+        resizeApp();
 
         // Start the presentation
         updatePresentation();
