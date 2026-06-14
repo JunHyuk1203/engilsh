@@ -13,12 +13,8 @@
         }
 
         html {
-            font-size: 100%; /* 16px = 1rem */
+            font-size: min(1.3vw, 16px); /* Dynamic scaling: exactly fits 1200px content inside any viewport width */
         }
-        @media (max-width: 1440px) { html { font-size: 90%; } }
-        @media (max-width: 1024px) { html { font-size: 75%; } }
-        @media (max-width: 768px) { html { font-size: 60%; } }
-        @media (max-width: 480px) { html { font-size: 50%; } }
 
         body {
             font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
@@ -664,15 +660,6 @@
             line-height: 1.1;
         }
 
-        /* Responsive Layout for Tablets & Mobile */
-        @media (max-width: 1024px) {
-            .intro-slide, .movie-intro-slide {
-                flex-direction: column;
-                text-align: center;
-                gap: 3rem;
-                padding-top: 5rem;
-            }
-        }
     </style>
 </head>
 
