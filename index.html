@@ -17,9 +17,13 @@
             background-color: #050505;
             color: white;
             overflow: hidden;
-            /* Prevent scrolling, controlled by JS */
+            display: flex;
+            align-items: center;
+            justify-content: center;
             height: 100vh;
             width: 100vw;
+            margin: 0;
+            padding: 0;
         }
 
         /* Thermal Imaging Art Blur Background */
@@ -54,11 +58,13 @@
 
         #app {
             position: relative;
-            width: 100%;
-            height: 100%;
+            width: 1920px;
+            height: 1080px;
             display: flex;
             align-items: center;
             justify-content: center;
+            transform-origin: center center;
+            overflow: hidden;
         }
 
         /* Slide Base Setup */
@@ -291,7 +297,7 @@
         }
 
         .controls-container {
-            position: fixed;
+            position: absolute;
             bottom: 2rem;
             right: 2rem;
             display: flex;
@@ -590,7 +596,7 @@
 
         /* Now Playing Header */
         .now-playing-header {
-            position: fixed;
+            position: absolute;
             top: 2.5rem;
             left: 50%;
             transform: translateX(-50%) translateY(-150%);
@@ -760,37 +766,37 @@
                 <p style="font-size: 2.5rem; color: rgba(255,255,255,0.5); font-weight: 600;">[ 모둠 활동 사진 공간 ]</p>
             </div>
         </div>
+
+        <!-- Controls -->
+        <div class="controls-container">
+            <button id="replay-btn" title="Replay Video" style="display: none;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 2v6h-6"></path>
+                    <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+                </svg>
+            </button>
+            <button id="global-audio-btn" title="Play Audio" style="display: none;" onclick="playGlobalAudio()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left:3px;">
+                    <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                </svg>
+            </button>
+            <div class="nav-buttons">
+                <button id="prev-btn" title="Previous (Left Arrow)">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M15 18l-6-6 6-6" />
+                    </svg>
+                </button>
+                <button id="next-btn" title="Next (Right Arrow / Space)">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M9 18l6-6-6-6" />
+                    </svg>
+                </button>
+            </div>
+        </div>
     </div>
 
     <!-- Global Audio -->
     <audio id="global-audio-player"></audio>
-
-    <!-- Controls -->
-    <div class="controls-container">
-        <button id="replay-btn" title="Replay Video" style="display: none;">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M21 2v6h-6"></path>
-                <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
-            </svg>
-        </button>
-        <button id="global-audio-btn" title="Play Audio" style="display: none;" onclick="playGlobalAudio()">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left:3px;">
-                <polygon points="5 3 19 12 5 21 5 3"></polygon>
-            </svg>
-        </button>
-        <div class="nav-buttons">
-            <button id="prev-btn" title="Previous (Left Arrow)">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M15 18l-6-6 6-6" />
-                </svg>
-            </button>
-            <button id="next-btn" title="Next (Right Arrow / Space)">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M9 18l6-6-6-6" />
-                </svg>
-            </button>
-        </div>
-    </div>
 
     <script>
         // Presentation Data with Lyrics and Grammar Points
@@ -1108,7 +1114,22 @@
             }
         });
 
-        // Start the presentation
+        // Start the presentation and handle scaling
+        function resizeApp() {
+            const app = document.getElementById('app');
+            const targetRatio = 16 / 9;
+            const windowRatio = window.innerWidth / window.innerHeight;
+            let scale;
+            if (windowRatio > targetRatio) {
+                scale = window.innerHeight / 1080;
+            } else {
+                scale = window.innerWidth / 1920;
+            }
+            app.style.transform = `scale(${scale})`;
+        }
+        window.addEventListener('resize', resizeApp);
+        resizeApp();
+
         updatePresentation();
     </script>
 </body>
