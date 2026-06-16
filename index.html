@@ -30,7 +30,7 @@
             padding: 0;
         }
 
-        /* Thermal Imaging Art Blur Background */
+        /* Dynamic Background */
         .bg-blur {
             position: fixed;
             top: -50%;
@@ -38,26 +38,19 @@
             width: 200%;
             height: 200%;
             z-index: -1;
-            background: radial-gradient(circle at 30% 40%, rgba(200, 10, 84, 0.4), transparent 50%),
-                radial-gradient(circle at 70% 30%, rgba(200, 100, 0, 0.4), transparent 50%),
-                radial-gradient(circle at 40% 70%, rgba(150, 150, 0, 0.4), transparent 50%),
-                radial-gradient(circle at 60% 60%, rgba(0, 150, 0, 0.4), transparent 50%),
-                radial-gradient(circle at 50% 50%, rgba(0, 0, 150, 0.4), transparent 50%),
-                radial-gradient(circle at 20% 80%, rgba(0, 150, 150, 0.4), transparent 50%);
-            background-color: #0d0d14;
-            filter: blur(120px) saturate(120%);
-            opacity: 0.6;
+            background: radial-gradient(circle at 30% 40%, var(--bg-c1, rgba(0,0,0,0)), transparent 50%),
+                radial-gradient(circle at 70% 30%, var(--bg-c2, rgba(0,0,0,0)), transparent 50%),
+                radial-gradient(circle at 40% 70%, var(--bg-c3, rgba(0,0,0,0)), transparent 50%);
+            background-color: var(--bg-base, #050505);
+            filter: blur(100px) saturate(130%);
+            opacity: 0.8;
             animation: bgDrift 25s ease-in-out infinite alternate;
+            transition: background-color 1.2s ease, opacity 1.2s ease;
         }
 
         @keyframes bgDrift {
-            0% {
-                transform: translate(0, 0) scale(1);
-            }
-
-            100% {
-                transform: translate(-5%, -5%) scale(1.1);
-            }
+            0%   { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(-5%, -5%) scale(1.1); }
         }
 
         #app {
@@ -928,9 +921,46 @@
         }
 
         // 3. Update Function
+        /* Background color palettes per content */
+        const bgThemes = {
+            black:    { base: '#050505', c1: 'rgba(0,0,0,0)',      c2: 'rgba(0,0,0,0)',       c3: 'rgba(0,0,0,0)' },
+            avengers: { base: '#0a0005', c1: 'rgba(180,0,40,0.5)', c2: 'rgba(120,0,180,0.4)', c3: 'rgba(200,140,0,0.3)' },
+            gangsta:  { base: '#01080a', c1: 'rgba(0,80,70,0.5)',  c2: 'rgba(10,40,80,0.4)',  c3: 'rgba(30,60,30,0.3)' },
+            shape:    { base: '#0a0500', c1: 'rgba(200,70,10,0.5)',c2: 'rgba(180,40,80,0.4)', c3: 'rgba(220,120,0,0.3)' },
+        };
+
+        function applyBgTheme(themeName) {
+            const t = bgThemes[themeName] || bgThemes.black;
+            const bg = document.querySelector('.bg-blur');
+            if (!bg) return;
+            bg.style.setProperty('--bg-base', t.base);
+            bg.style.setProperty('--bg-c1',   t.c1);
+            bg.style.setProperty('--bg-c2',   t.c2);
+            bg.style.setProperty('--bg-c3',   t.c3);
+            bg.style.backgroundColor = t.base;
+        }
+
+        function getThemeForStep(step) {
+            if (!step) return 'black';
+            if (step.type === 'slide') {
+                if (['slide-movie-intro','slide-movie-1','slide-movie-2'].includes(step.id)) return 'avengers';
+                if (step.id === 'slide-intro-0') return 'gangsta';
+                if (step.id === 'slide-intro-1') return 'shape';
+                return 'black';
+            }
+            if (step.type === 'lyric') {
+                if (step.songIdx === 0) return 'gangsta';
+                if (step.songIdx === 1) return 'shape';
+            }
+            return 'black';
+        }
+
         function updatePresentation() {
             const step = steps[currentStep];
             let hasActiveVideo = false;
+
+            // Update background theme
+            applyBgTheme(getThemeForStep(step));
 
             // Handle Global Audio Player
             const globalAudioPlayer = document.getElementById('global-audio-player');
