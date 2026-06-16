@@ -28,9 +28,10 @@
             height: 100dvh;
             margin: 0;
             padding: 0;
+            transition: background-color 1.5s ease;
         }
 
-        /* Dynamic Background */
+        /* Subtle ambient glow overlay */
         .bg-blur {
             position: fixed;
             top: -50%;
@@ -38,14 +39,12 @@
             width: 200%;
             height: 200%;
             z-index: -1;
-            background: radial-gradient(circle at 30% 40%, var(--bg-c1, rgba(0,0,0,0)), transparent 50%),
-                radial-gradient(circle at 70% 30%, var(--bg-c2, rgba(0,0,0,0)), transparent 50%),
-                radial-gradient(circle at 40% 70%, var(--bg-c3, rgba(0,0,0,0)), transparent 50%);
-            background-color: var(--bg-base, #050505);
-            filter: blur(100px) saturate(130%);
-            opacity: 0.8;
+            background: radial-gradient(circle at 30% 40%, rgba(255,255,255,0.04), transparent 50%),
+                        radial-gradient(circle at 70% 60%, rgba(255,255,255,0.03), transparent 50%);
+            filter: blur(80px);
+            opacity: 0.6;
             animation: bgDrift 25s ease-in-out infinite alternate;
-            transition: background-color 1.2s ease, opacity 1.2s ease;
+            pointer-events: none;
         }
 
         @keyframes bgDrift {
@@ -921,23 +920,15 @@
         }
 
         // 3. Update Function
-        /* Background color palettes per content */
         const bgThemes = {
-            black:    { base: '#050505', c1: 'rgba(0,0,0,0)',      c2: 'rgba(0,0,0,0)',       c3: 'rgba(0,0,0,0)' },
-            avengers: { base: '#0a0005', c1: 'rgba(180,0,40,0.5)', c2: 'rgba(120,0,180,0.4)', c3: 'rgba(200,140,0,0.3)' },
-            gangsta:  { base: '#01080a', c1: 'rgba(0,80,70,0.5)',  c2: 'rgba(10,40,80,0.4)',  c3: 'rgba(30,60,30,0.3)' },
-            shape:    { base: '#0a0500', c1: 'rgba(200,70,10,0.5)',c2: 'rgba(180,40,80,0.4)', c3: 'rgba(220,120,0,0.3)' },
+            black:    '#050505',
+            avengers: '#1a0010',
+            gangsta:  '#00100d',
+            shape:    '#1a0800',
         };
 
         function applyBgTheme(themeName) {
-            const t = bgThemes[themeName] || bgThemes.black;
-            const bg = document.querySelector('.bg-blur');
-            if (!bg) return;
-            bg.style.setProperty('--bg-base', t.base);
-            bg.style.setProperty('--bg-c1',   t.c1);
-            bg.style.setProperty('--bg-c2',   t.c2);
-            bg.style.setProperty('--bg-c3',   t.c3);
-            bg.style.backgroundColor = t.base;
+            document.body.style.backgroundColor = bgThemes[themeName] || bgThemes.black;
         }
 
         function getThemeForStep(step) {
